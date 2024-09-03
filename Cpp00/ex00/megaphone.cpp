@@ -25,6 +25,9 @@ int main(int ac, char **av)
 	The term output stream refers to the flow of data from your program to an output device or destination, 
 		such as the console, a file, or even a network socket.
 
+	What is the Scope Resolution Operator (::)?
+	-	The scope resolution operator :: is used to specify the context in which an identifier is defined. It helps to distinguish between different variables, functions, or classes that might have the same name but exist in different scopes or namespaces.
+
 	What is std::?
 		-   std:: is a namespace in C++.
 		-   Namespace is like a container or a way to organize code in C++ so that names like functions, classes,
@@ -72,4 +75,6 @@ int main(int ac, char **av)
 			By using std::, you reduce the risk of accidentally calling a function with the same name that might be defined elsewhere in your code or in another library. 
 		-	Conclusion:
 			While both toupper and std::toupper will work perfectly fine in C++, using std::toupper is my preference because it’s clearer, aligns with modern C++ practices, and helps prevent potential issues in larger or more complex projects. It’s a small habit that can contribute to more maintainable and understandable code.
+
+	In the context of the C++ Standard Library and the page you're referring to, when they mention "object" (e.g., cin, cout, cerr, etc.), they are talking about instances of specific classes that handle input and output streams.
 */
