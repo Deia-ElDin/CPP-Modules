@@ -11,38 +11,39 @@ Contact::Contact()
 }
 
 // Parameterized Constructor: Contact::Contact(...)
-Contact::Contact(const std::string &first_name, 
-				const std::string &last_name, 
-				const std::string &nick_name, 
-				const std::string &phone_number, 
-				const std::string &darkest_secret)
-{
-	this->firstName = first_name;
-	this->lastName = last_name;
-	this->nickName = nick_name;
-	this->phoneNumber = phone_number;
-	this->darkestSecret = darkest_secret;
+Contact::Contact(
+	const std::string &firstName, 
+	const std::string &lastName, 
+	const std::string &nickName, 
+	const std::string &phoneNumber, 
+	const std::string &darkestSecret
+	) {
+	this->firstName = firstName;
+	this->lastName = lastName;
+	this->nickName = nickName;
+	this->phoneNumber = phoneNumber;
+	this->darkestSecret = darkestSecret;
 }
 
 // Setters
-void	Contact::setFirstName(const std::string &first_name) {
-	this->firstName = first_name; // Assign the parameter to the member variable
+void	Contact::setFirstName(const std::string &firstName) {
+	this->firstName = firstName; // Assign the parameter to the member variable
 }
 
-void	Contact::setLastName(const std::string &last_name) {
-	this->lastName = last_name;
+void	Contact::setLastName(const std::string &lastName) {
+	this->lastName = lastName;
 }
 
-void	Contact::setNickName(const std::string &nick_name) {
-	this->nickName = nick_name;
+void	Contact::setNickName(const std::string &nickName) {
+	this->nickName = nickName;
 }
 
-void	Contact::setPhoneNumber(const std::string &phone_number) {
-	this->phoneNumber = phone_number;
+void	Contact::setPhoneNumber(const std::string &phoneNumber) {
+	this->phoneNumber = phoneNumber;
 }
 
-void	Contact::setDarkestSecret(const std::string &darkest_secret) {
-	this->darkestSecret = darkest_secret;
+void	Contact::setDarkestSecret(const std::string &darkestSecret) {
+	this->darkestSecret = darkestSecret;
 }
 
 // Getters
@@ -86,7 +87,7 @@ std::string	Contact::getDarkestSecret() const {
 		-   The parameterized constructor is used to create objects with specific 
 			values for their data members.
 
-	*   void	Contact::setFirstName(const std::string &first_name)
+	*   void	Contact::setFirstName(const std::string &firstName)
 		{
 			-   The setFirstName method is a member function of the Contact class 
 				that is used to set the value of the firstName data member.

@@ -1,4 +1,3 @@
-#pragma once
 #ifndef __PHONE_BOOK_HPP__
 # define __PHONE_BOOK_HPP__
 
@@ -11,22 +10,25 @@ class PhoneBook
 {
 	private:
 		Contact	contacts[8];
-		int		contact_count;
+		int		contactCount;
+		int		contactCount;
 	
 	public:
 		PhoneBook();
-		void	add_contact();
-		void	search_contact();
-		void	exit_phonebook();
+
+		// Member Functions
+		void	addContact();
+		void	searchContact();
+		void	exitPhonebook();
+
+
+		// Getters
+		int		getContactCount() const;
 };
 
 #endif
 
 /*
-	-   #pragma once: 
-			This is a non-standard preprocessor directive supported by most C++ compilers
-			that prevents the current file from being included more than once in a single compilation.
-
 	-   #ifndef __PHONE_BOOK_HPP__, why __ at the beginning and end of the macro name?
 			The __PHONE_BOOK_HPP__ is a macro name, and the __ at the beginning and end of the macro name
 			is a convention to prevent the macro name from conflicting with other macro names. 

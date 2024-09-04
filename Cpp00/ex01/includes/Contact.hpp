@@ -1,8 +1,6 @@
-#pragma once
 #ifndef __CONTACT_HPP__
 # define __CONTACT_HPP__
 
-#include <iostream>
 #include <string>
 
 class   Contact
@@ -19,18 +17,18 @@ class   Contact
 		Contact();
 
 		// Parameterized Constructor
-		Contact(const std::string &first_name, 
-				const std::string &last_name, 
-				const std::string &nick_name, 
-				const std::string &phone_number, 
-				const std::string &darkest_secret);
+		Contact(const std::string &firstName, 
+				const std::string &lastName, 
+				const std::string &nickName, 
+				const std::string &phoneNumber, 
+				const std::string &darkestSecret);
 
 		// Setters
-		void		setFirstName(const std::string &first_name);
-		void		setLastName(const std::string &last_name);
-		void		setNickName(const std::string &nick_name);
-		void		setPhoneNumber(const std::string &phone_number);
-		void		setDarkestSecret(const std::string &darkest_secret);
+		void		setFirstName(const std::string &firstName);
+		void		setLastName(const std::string &lastName);
+		void		setNickName(const std::string &nickName);
+		void		setPhoneNumber(const std::string &phoneNumber);
+		void		setDarkestSecret(const std::string &darkestSecret);
 
 		// Getters
 		std::string	getFirstName() const;
