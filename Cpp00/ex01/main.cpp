@@ -1,9 +1,10 @@
-#include "includes/PhoneBook.hpp"
-#include "includes/Contact.hpp"
+#include "PhoneBook.hpp"
+#include "Contact.hpp"
 
 int main(void)
 {
 	PhoneBook	myPhonebook;
 
 	myPhonebook.add_contact();
+	
 }

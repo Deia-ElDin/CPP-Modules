@@ -1,12 +1,7 @@
-#include "./includes/PhoneBook.hpp"
+#include "/PhoneBook.hpp"
 
 
 PhoneBook::PhoneBook() : contactCount(0), currentIndex(0) {};
-
-PhoneBook::PhoneBook() {
-	contactCount = 0;
-	currentIndex = 0;
-}
 
 int	PhoneBook::getContactCount() {
 	return contactCount;
@@ -49,7 +44,6 @@ void	PhoneBook::addContact() {
 	}
 }
 
-
 /*
 	*	PhoneBook::PhoneBook() : contactCount(0), currentIndex(0) {};
 		-	Member initializer list in C++: It is used to initialize class 
@@ -75,7 +69,25 @@ void	PhoneBook::addContact() {
 
 		Why Use a Member Initializer List?
 		-	Efficiency:
-			For primitive types like int, it makes little difference whether you use a member initializer list or initialize the variables in the constructor body. However, for non-primitive types (such as objects or const members), member initializer lists are more efficient because they avoid calling the default constructor first and then assigning values.
+			For primitive types like int, char, float, etc., there isn't a big performance difference between initializing them in the initializer list and initializing them in the constructor body. But for non-primitive types (such as classes and objects), const members, and references, using the initializer list is often more efficient. Here's why:
+
+			+	Without an Initializer List (Constructor Body Initialization):
+				If you don't use a member initializer list and instead initialize variables in the constructor body, here's what happens:
+
+				1-	Default Constructor is Called:
+
+					When you create an object, its members are first default-initialized (using the default constructor). Even if you plan to assign a value in the constructor body, this default initialization happens first.
+
+				2-	Assignment in the Constructor Body:
+
+					After the default initialization, the constructor body runs. Here, the member variables are assigned new values.
+
+				So for non-primitive types like std::string, if you initialize them in the constructor body, you're essentially doing two operations:
+					.	Default initialization (empty string or default state).
+					.	Assignment (replacing the default value).
+
+			+	With a Member Initializer List:
+					When you use a member initializer list, the initialization is done directly with the specified value without calling the default constructor. The member is initialized with the correct value right from the start, avoiding the overhead of first creating a default object and then re-assigning it.
 
 		-	Const and Reference Members:
 			If your class contains const or reference members, they must be initialized in the member initializer list because they cannot be assigned to later in the constructor body.

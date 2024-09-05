@@ -1,9 +1,6 @@
 #ifndef __PHONE_BOOK_HPP__
 # define __PHONE_BOOK_HPP__
 
-# include <iostream>
-# include <iomanip>
-# include <string>
 # include "Contact.hpp"
 
 class PhoneBook
@@ -20,7 +17,6 @@ class PhoneBook
 		void	addContact();
 		void	searchContact();
 		void	exitPhonebook();
-
 
 		// Getters
 		int		getContactCount() const;

@@ -1,7 +1,9 @@
 #ifndef __CONTACT_HPP__
 # define __CONTACT_HPP__
 
-#include <string>
+# include <iostream>
+# include <iomanip>
+# include <string>
 
 class   Contact
 {
@@ -16,25 +18,23 @@ class   Contact
 		// Default Constructor
 		Contact();
 
-		// Parameterized Constructor
-		Contact(const std::string &firstName, 
-				const std::string &lastName, 
-				const std::string &nickName, 
-				const std::string &phoneNumber, 
-				const std::string &darkestSecret);
-
 		// Setters
 		void		setFirstName(const std::string &firstName);
 		void		setLastName(const std::string &lastName);
 		void		setNickName(const std::string &nickName);
 		void		setPhoneNumber(const std::string &phoneNumber);
 		void		setDarkestSecret(const std::string &darkestSecret);
-
+		void		setContact(const std::string &firstName, 
+							   const std::string &lastName, 
+							   const std::string &nickName, 
+							   const std::string &phoneNumber, 
+							   const std::string &darkestSecret);
 		// Getters
 		std::string	getFirstName() const;
 		std::string	getLastName() const;
 		std::string	getPhoneNumber() const;
 		std::string	getDarkestSecret() const;
+		std::string	getContact() const;
 };
 
 #endif
