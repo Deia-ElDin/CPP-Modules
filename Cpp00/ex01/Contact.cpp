@@ -3,18 +3,14 @@
 // Helpers Functions
 bool	allAlpha(const std::string &str) {
 	for(size_t i = 0; i < str.length(); i++) {
-        if (!std::isalpha(str[i])) {
-			return false;
-		}
+        if (!std::isalpha(str[i])) return false;
 	}
 	return true; 
 }
 
 bool	allDigits(const std::string &str) {
 	for(size_t i = 0; i < str.length(); i++) {
-		if (!std::isdigit(str[i])) {
-			return false;
-		}
+		if (!std::isdigit(str[i])) return false;
 	}
 	return true; 
 }
@@ -107,8 +103,6 @@ std::string	Contact::getPhoneNumber() const {
 std::string	Contact::getDarkestSecret() const {
 	return (this->darkestSecret);
 }
-
-
 
 /*
 	*   Default Constructor: Contact::Contact()

@@ -1,6 +1,7 @@
 #include "PhoneBook.hpp"
 
 PhoneBook::PhoneBook() : contactCount(0), currentIndex(0) {};
+
 PhoneBook::~PhoneBook() {
 	std::cout << Nl Bold Green << "Goodbye!" << Reset Nl;
 };
@@ -17,10 +18,7 @@ void	PhoneBook::addContact() {
 	isValidContact = newContact.setContact(firstName, lastName, nickName, phoneNumber, darkestSecret);
 
 	if (isValidContact) Printer::printSuccess("Contact added successfully.");
-	else {
-		Printer::printErr("Invalid contact. Please try again.");
-		return;
-	}
+	else return (Printer::printErr("Invalid contact. Please try again."));
 
 	if (contactCount < 2) {
 		contacts[contactCount] = newContact;
@@ -32,15 +30,11 @@ void	PhoneBook::addContact() {
 	}
 }
 
-
 void	PhoneBook::searchContact() {
 	std::string	searchQuery;
 	int			index;
 
-	if (contactCount == 0) {
-		Printer::printErr("PhoneBook is empty.");
-		return;
-	}
+	if (contactCount == 0) return (Printer::printErr("PhoneBook is empty."));
 
 	Printer::printTableHeader();
 	for (int i = 0; i < contactCount; i++) {
@@ -61,10 +55,8 @@ void	PhoneBook::searchContact() {
 	}
 	
 	index = std::atoi(searchQuery.c_str());  
-	if (index < 1 || index > contactCount) {
-		Printer::printErr("Invalid contact index. Please try again.");
-		return;
-	}
+	if (index < 1 || index > contactCount)
+		return (Printer::printErr("Invalid contact index. Please try again."));
 
 	Printer::printContact(
 		this->contacts[index - 1].getFirstName(),
