@@ -1,5 +1,41 @@
 #include "Contact.hpp"
 
+// Helpers Functions
+bool	allAlpha(const std::string &str) {
+	for(size_t i = 0; i < str.length(); i++) {
+        if (!std::isalpha(str[i])) {
+			return false;
+		}
+	}
+	return true; 
+}
+
+bool	allDigits(const std::string &str) {
+	for(size_t i = 0; i < str.length(); i++) {
+		if (!std::isdigit(str[i])) {
+			return false;
+		}
+	}
+	return true; 
+}
+
+bool	validateField(
+	const std::string &field, 
+	const std::string &fieldName, 
+	bool alphaOnly = false, 
+	bool digitsOnly = false) {
+	if (field.empty()) return false;
+    if (alphaOnly && !allAlpha(field)) {
+        Printer::printErr(fieldName + " must contain only alphabetic characters.");
+        return false;
+    }
+    if (digitsOnly && !allDigits(field)) {
+        Printer::printErr(fieldName + " must contain only numeric characters.");
+        return false;
+    }
+    return true;
+}
+
 // Default Constructor: Contact::Contact(), Member Initializer List
 Contact::Contact() 
     : firstName(""), 
@@ -10,7 +46,7 @@ Contact::Contact()
 
 // Setters
 void	Contact::setFirstName(const std::string &firstName) {
-	this->firstName = firstName; // Assign the parameter to the member variable
+    this->firstName = firstName; // Assign the first name if valid
 }
 
 void	Contact::setLastName(const std::string &lastName) {
@@ -26,20 +62,29 @@ void	Contact::setPhoneNumber(const std::string &phoneNumber) {
 }
 
 void	Contact::setDarkestSecret(const std::string &darkestSecret) {
+	
 	this->darkestSecret = darkestSecret;
 }
 
-void	Contact::setContact(
+bool	Contact::setContact(
 	const std::string &firstName, 
     const std::string &lastName, 
     const std::string &nickName, 
     const std::string &phoneNumber, 
     const std::string &darkestSecret) {
+
+	if (!validateField(firstName, "First Name", true)) return false;
+	if (!validateField(lastName, "Last Name", true)) return false;
+	if (!validateField(nickName, "Nick Name")) return false;
+	if (!validateField(phoneNumber, "Phone Number", false, true)) return false;
+	if (!validateField(darkestSecret, "Darkest Secret")) return false;
+	
 	setFirstName(firstName);
 	setLastName(lastName);
 	setNickName(nickName);
 	setPhoneNumber(phoneNumber);
 	setDarkestSecret(darkestSecret);
+	return true;
 }
 
 // Getters
@@ -63,9 +108,7 @@ std::string	Contact::getDarkestSecret() const {
 	return (this->darkestSecret);
 }
 
-std::string Contact::getContact() const {
-	return (getFirstName() + getLastName() + getNickName() + getPhoneNumber() + getDarkestSecret());
-}
+
 
 /*
 	*   Default Constructor: Contact::Contact()
@@ -176,6 +219,7 @@ std::string Contact::getContact() const {
 
 	*   void	Contact::setFirstName(const std::string &firstName)
 		{
+			-	std::all_of(begin_iterator, end_iterator, predicate);
 			-   The setFirstName method is a member function of the Contact class 
 				that is used to set the value of the firstName data member.
 			-   The setFirstName method takes a const reference to a string as an 
@@ -196,7 +240,6 @@ std::string Contact::getContact() const {
 */
 
 /*
-
 	*	Primitive Types (like int, char, float):
 		-	Not initialized by default.
 		-	You must explicitly initialize them, or they will contain garbage values.

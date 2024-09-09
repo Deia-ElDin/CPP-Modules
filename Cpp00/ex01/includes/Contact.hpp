@@ -1,9 +1,7 @@
 #ifndef __CONTACT_HPP__
 # define __CONTACT_HPP__
 
-# include <iostream>
-# include <iomanip>
-# include <string>
+#include "Printer.hpp"
 
 class   Contact
 {
@@ -24,7 +22,7 @@ class   Contact
 		void		setNickName(const std::string &nickName);
 		void		setPhoneNumber(const std::string &phoneNumber);
 		void		setDarkestSecret(const std::string &darkestSecret);
-		void		setContact(const std::string &firstName, 
+		bool		setContact(const std::string &firstName, 
 							   const std::string &lastName, 
 							   const std::string &nickName, 
 							   const std::string &phoneNumber, 
@@ -32,9 +30,9 @@ class   Contact
 		// Getters
 		std::string	getFirstName() const;
 		std::string	getLastName() const;
+		std::string	getNickName() const;
 		std::string	getPhoneNumber() const;
 		std::string	getDarkestSecret() const;
-		std::string	getContact() const;
 };
 
 #endif

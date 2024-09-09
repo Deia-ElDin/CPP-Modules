@@ -1,47 +1,78 @@
-#include "/PhoneBook.hpp"
-
+#include "PhoneBook.hpp"
 
 PhoneBook::PhoneBook() : contactCount(0), currentIndex(0) {};
-
-int	PhoneBook::getContactCount() {
-	return contactCount;
-}
+PhoneBook::~PhoneBook() {
+	std::cout << Nl Bold Green << "Goodbye!" << Reset Nl;
+};
 
 void	PhoneBook::addContact() {
-	// Variables Declaration
-	std::string	firstName;
-	std::string	lastName;
-	std::string	nickName;
-	std::string	phoneNumber;
-	std::string	darkestSecret;
+	std::string	firstName = Printer::getUserInput("Enter First Name: ");
+	std::string	lastName = Printer::getUserInput("Enter Last Name: ");
+	std::string	nickName = Printer::getUserInput("Enter Nick Name: ");
+	std::string	phoneNumber = Printer::getUserInput("Enter Phone Number: ");
+	std::string	darkestSecret = Printer::getUserInput("Enter Darkest Secret: ");
+	Contact 	newContact;
+	bool		isValidContact;
 
-	// Prompting the User: You prompt the user to enter their first name.
-	// Reading Input with std::getline:
-	// std::getline to safely read a full line of input from the user.
-	// std::cin to read input from the user.
-	// std::ws to handle any leading whitespace.
-	// store the input in the firstName variable.
-	std::cout << "Enter First Name: ";
-	std::getline(std::cin >> std::ws, firstName);
-	std::cout << "Enter Last Name: ";
-	std::getline(std::cin >> std::ws, lastName);
-	std::cout << "Enter Nick Name: ";
-	std::getline(std::cin >> std::ws, nickName);
-	std::cout << "Enter Phone Number: ";
-	std::getline(std::cin >> std::ws, phoneNumber);
-	std::cout << "Enter Darkest Secret: ";
-	std::getline(std::cin >> std::ws, darkestSecret);
+	isValidContact = newContact.setContact(firstName, lastName, nickName, phoneNumber, darkestSecret);
 
-	// Creating a New Contact
-	Contact newContact(firstName, lastName, nickName, phoneNumber, darkestSecret);
+	if (isValidContact) Printer::printSuccess("Contact added successfully.");
+	else {
+		Printer::printErr("Invalid contact. Please try again.");
+		return;
+	}
 
-	if (contactCount < 8) {
+	if (contactCount < 2) {
 		contacts[contactCount] = newContact;
 		contactCount++;
 	} else {
+		Printer::printMsg("PhoneBook is full. Replacing the oldest contact.");
 		contacts[currentIndex] = newContact;
 		currentIndex = (currentIndex + 1) % 8;
 	}
+}
+
+
+void	PhoneBook::searchContact() {
+	std::string	searchQuery;
+	int			index;
+
+	if (contactCount == 0) {
+		Printer::printErr("PhoneBook is empty.");
+		return;
+	}
+
+	Printer::printTableHeader();
+	for (int i = 0; i < contactCount; i++) {
+		Printer::printTableBody(
+			std::to_string(i + 1),
+			this->contacts[i].getFirstName(),
+			this->contacts[i].getLastName(),
+			this->contacts[i].getNickName()
+		);
+	}	
+
+	searchQuery = Printer::getUserInput("Enter the index of the contact you want to search: ");
+	for (size_t i = 0; i < searchQuery.length(); i++) {
+		if (!std::isdigit(searchQuery[i])) {
+            Printer::printErr("Invalid search query. Must contain only digits.");
+			return;
+		}
+	}
+	
+	index = std::atoi(searchQuery.c_str());  
+	if (index < 1 || index > contactCount) {
+		Printer::printErr("Invalid contact index. Please try again.");
+		return;
+	}
+
+	Printer::printContact(
+		this->contacts[index - 1].getFirstName(),
+		this->contacts[index - 1].getLastName(),
+		this->contacts[index - 1].getNickName(),
+		this->contacts[index - 1].getPhoneNumber(),
+		this->contacts[index - 1].getDarkestSecret()
+	);
 }
 
 /*
