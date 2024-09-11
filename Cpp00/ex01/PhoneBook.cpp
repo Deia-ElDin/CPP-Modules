@@ -20,7 +20,7 @@ void	PhoneBook::addContact() {
 	if (isValidContact) Printer::printSuccess("Contact added successfully.");
 	else return (Printer::printErr("Invalid contact. Please try again."));
 
-	if (contactCount < 2) {
+	if (contactCount < 8) {
 		contacts[contactCount] = newContact;
 		contactCount++;
 	} else {
