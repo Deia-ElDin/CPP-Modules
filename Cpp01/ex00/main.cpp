@@ -2,7 +2,7 @@
 
 int main(void)
 {
-    Zombie  *zombie = newZombie("Z 1");
+    Zombie* zombie = newZombie("Z 1");
 
     zombie->announce();
     delete zombie;
