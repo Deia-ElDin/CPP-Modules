@@ -26,7 +26,9 @@ int main(int ac, char **av)
 		such as the console, a file, or even a network socket.
 
 	What is the Scope Resolution Operator (::)?
-	-	The scope resolution operator :: is used to specify the context in which an identifier is defined. It helps to distinguish between different variables, functions, or classes that might have the same name but exist in different scopes or namespaces.
+	-	The scope resolution operator :: is used to specify the context in which an identifier is defined. 
+		It helps to distinguish between different variables, functions, 
+		or classes that might have the same name but exist in different scopes or namespaces.
 
 	What is std::?
 		-   std:: is a namespace in C++.
