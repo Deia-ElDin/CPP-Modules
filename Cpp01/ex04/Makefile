@@ -12,7 +12,7 @@ $(NAME): $(OBJ)
 all: $(NAME)
 
 run: $(NAME)
-	@./$(NAME) text s1 s2
+	@./$(NAME) test s1 s2
 
 clean:
 	@rm -f $(OBJ)

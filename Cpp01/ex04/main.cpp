@@ -13,12 +13,12 @@ int printSuccess(const std::string& filename) {
     return 0;
 }
 
-bool openInputFile(std::ifstream &file, const std::string &filename) {
+bool openIFile(std::ifstream &file, const std::string &filename) {
     file.open(filename.c_str());
     return file.is_open();
 }
 
-bool openOutputFile(std::ofstream &file, const std::string &filename) {
+bool openOFile(std::ofstream &file, const std::string &filename) {
     file.open(filename.c_str());
     return file.is_open();
 }
@@ -30,7 +30,10 @@ std::string readFile(std::ifstream &file) {
     return buffer.str();    // Get the content as a string
 }
 
-std::string replaceOccurrences(const std::string &content, const std::string &s1, const std::string &s2) {
+std::string replaceOccurrences(
+    const std::string &content, 
+    const std::string &s1, 
+    const std::string &s2) {
     std::string modifiedContent;
     size_t pos = 0, findPos;
 
@@ -46,8 +49,8 @@ std::string replaceOccurrences(const std::string &content, const std::string &s1
 }
 
 
-int main(int argc, char **av) {
-    if (argc != 4) return printErr("Invalid number of arguments");
+int main(int ac, char **av) {
+    if (ac != 4) return printErr("Invalid number of arguments");
 
     std::string filename = av[1];
     std::string s1 = av[2];
@@ -56,7 +59,7 @@ int main(int argc, char **av) {
     if (s1.empty()) return printErr("The string to be replaced cannot be empty.");
 
     std::ifstream inputFile;
-    if (!openInputFile(inputFile, filename))
+    if (!openIFile(inputFile, filename))
         return printErr("Cannot open file " + filename);
 
     std::string content = readFile(inputFile);
@@ -65,7 +68,7 @@ int main(int argc, char **av) {
     std::string modifiedContent = replaceOccurrences(content, s1, s2);
 
     std::ofstream outputFile;
-    if (!openOutputFile(outputFile, filename + ".replace")) 
+    if (!openOFile(outputFile, filename + ".replace")) 
         return printErr("Cannot create file " + filename + ".replace");
 
     outputFile << modifiedContent;
