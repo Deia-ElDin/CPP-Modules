@@ -57,7 +57,7 @@ int main(int argc, char **av) {
 
     std::ifstream inputFile;
     if (!openInputFile(inputFile, filename))
-        return printErr("Cannot open file" + filename);
+        return printErr("Cannot open file " + filename);
 
     std::string content = readFile(inputFile);
     inputFile.close();
@@ -66,14 +66,13 @@ int main(int argc, char **av) {
 
     std::ofstream outputFile;
     if (!openOutputFile(outputFile, filename + ".replace")) 
-        return printErr("Cannot create file" + filename + ".replace");
+        return printErr("Cannot create file " + filename + ".replace");
 
     outputFile << modifiedContent;
     outputFile.close();
 
     return printSuccess(filename);
 }
-
 
 /*
     findPos = content.find(s1, pos):

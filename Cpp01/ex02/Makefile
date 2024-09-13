@@ -12,13 +12,13 @@ $(Name): $(OBJ)
 all: $(Name)
 
 run: $(Name)
-	./$(Name)
+	@./$(Name)
 
 clean:
-	rm -f $(OBJ)
+	@rm -f $(OBJ)
 
 fclean: clean
-	rm -f $(Name)
+	@rm -f $(Name)
 
 re: fclean all
 
