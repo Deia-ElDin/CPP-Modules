@@ -24,7 +24,7 @@ bool openOFile(std::ofstream &file, const std::string &filename) {
 }
 
 std::string readFile(std::ifstream &file) {
-    std::stringstream buffer;
+    std::stringstream buffer; // Read the entire contents of the file into a single std::string
     
     buffer << file.rdbuf();  // Read entire file into the buffer
     return buffer.str();    // Get the content as a string
