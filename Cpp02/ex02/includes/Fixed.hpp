@@ -34,7 +34,7 @@ class Fixed
 
         // Increment/Decrement operators
         Fixed &operator++(); 
-        Fixed operator++(int i);  
+        Fixed operator++(int);  
         Fixed &operator--();   
         Fixed operator--(int);
 

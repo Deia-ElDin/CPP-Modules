@@ -61,3 +61,7 @@ int     Fixed::toInt(void) const {
     return _fixedPointValue >> _fractionalBits;
 }
 
+std::ostream &operator<<(std::ostream &out, const Fixed &value) {
+    out << value.toFloat();
+    return out;
+}
