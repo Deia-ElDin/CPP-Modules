@@ -1,7 +1,8 @@
 #include "ClapTrap.hpp"
+#include "ScavTrap.hpp"
 
 int main() {
-    ClapTrap robot("Clappy");
+    ScavTrap robot("Clappy");
 
     robot.attack("enemy");
     robot.takeDamage(5);

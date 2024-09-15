@@ -1,9 +1,9 @@
-NAME = ex00
+NAME = ex01
 
 CXX = c++
 CXXFLAGS = -Wall -Wextra -Werror -std=c++98 -Iincludes
 
-SRC = main.cpp src/ClapTrap.cpp
+SRC = main.cpp src/ClapTrap.cpp src/ScavTrap.cpp
 OBJ = $(SRC:.cpp=.o)
 
 $(NAME): $(OBJ)

@@ -1,6 +1,6 @@
 #include "ClapTrap.hpp"
 
-void    printMsg(const std::string& msg, const std::string& color) {
+void   ClapTrap::printMsg(const std::string& msg, const std::string& color) {
     std::string textBold = "\033[1m" ;
     std::string textColor;
     std::string textReset = "\033[0m";
