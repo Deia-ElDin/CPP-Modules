@@ -1,7 +1,7 @@
 #include "ClapTrap.hpp"
 
 void   ClapTrap::printMsg(const std::string& msg, const std::string& color) {
-    std::string textBold = "\033[1m" ;
+    std::string textBold = "\033[1m";
     std::string textColor;
     std::string textReset = "\033[0m";
 
@@ -10,11 +10,19 @@ void   ClapTrap::printMsg(const std::string& msg, const std::string& color) {
     else if (color == "yellow") textColor = "\033[33m";     // Yellow
     else if (color == "blue") textColor = "\033[34m";       // Blue
     else if (color == "magenta") textColor = "\033[35m";    // Magenta
+    else if (color == "cyan") textColor = "\033[36m";       // Cyan
     else textColor = "\033[37m";                            // White
 
     std::string fullMsg = textBold + textColor + msg + textReset;
     
     std::cout << fullMsg << std::endl; 
+}
+
+void    ClapTrap::printStatus(const ClapTrap& clapTrap) {
+    printMsg("  Name         : " + clapTrap._name, "cyan");
+    printMsg("  Hit Points   : " + std::to_string(clapTrap._hitPoints), "cyan");
+    printMsg("  Energy Points: " + std::to_string(clapTrap._energyPoints), "cyan");
+    printMsg("  Attack Damage: " + std::to_string(clapTrap._attackDamage), "cyan");
 }
 
 ClapTrap::ClapTrap() 
@@ -62,6 +70,9 @@ void    ClapTrap::attack(std::string const& target) {
 }
 
 void    ClapTrap::takeDamage(unsigned int amount) {
+    if (_hitPoints <= 0) 
+        return(printMsg("ClapTrap " + _name + " is already dead!", "red"));
+
     _hitPoints -= amount;
 
     printMsg("ClapTrap " + this->_name + " takes " 

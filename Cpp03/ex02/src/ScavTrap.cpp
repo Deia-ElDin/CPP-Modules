@@ -52,6 +52,9 @@ void   ScavTrap::attack(std::string const& target) {
 }
 
 void   ScavTrap::takeDamage(unsigned int amount) {
+    if (_hitPoints <= 0) 
+        return(printMsg("ScavTrap " + _name + " can't repair!", "red"));
+
     _hitPoints -= amount;
 
     printMsg("ScavTrap " + this->_name + " takes " 

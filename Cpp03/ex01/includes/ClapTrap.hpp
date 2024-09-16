@@ -18,9 +18,9 @@ class   ClapTrap
         ClapTrap& operator=(const ClapTrap& other); // Copy assignment operator
         virtual ~ClapTrap();                        // Destructor
 
-        void    attack(std::string const& target);
-        void    takeDamage(unsigned int amount);
-        void    beRepaired(unsigned int amount);
+        virtual void    attack(std::string const& target);
+        virtual void    takeDamage(unsigned int amount);
+        virtual void    beRepaired(unsigned int amount);
 
         std::string     getName() const;
         int             getHitPoints() const;
@@ -31,8 +31,8 @@ class   ClapTrap
         void            setHitPoints(int hitPoints);
         void            setEnergyPoints(int energyPoints);
         void            setAttackDamage(int attackDamage);
-        static  void    printMsg(const std::string& msg, const std::string& color);
-
+        static void     printMsg(const std::string& msg, const std::string& color);
+        static void     printStatus(const ClapTrap& clapTrap);
 };
 
 

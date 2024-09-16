@@ -52,6 +52,9 @@ void    FragTrap::attack(std::string const& target) {
 }
 
 void    FragTrap::takeDamage(unsigned int amount) {
+    if (_hitPoints <= 0) 
+        return(printMsg("FragTrap " + _name + " can't repair!", "red"));
+
     _hitPoints -= amount;
 
     printMsg("FragTrap " + this->_name + " takes " 
