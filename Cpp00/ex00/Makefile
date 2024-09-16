@@ -1,4 +1,4 @@
-NAME = megaphone
+NAME = prog
 
 CXX = c++
 FLAGS = -Wall -Wextra -Werror -std=c++98

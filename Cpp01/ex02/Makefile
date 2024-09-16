@@ -1,4 +1,4 @@
-Name = ex02
+Name = prog
 
 CXX = c++
 CXXFLAGS = -Wall -Wextra -Werror -std=c++98
