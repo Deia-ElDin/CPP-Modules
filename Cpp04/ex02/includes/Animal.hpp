@@ -17,7 +17,7 @@ class Animal
 
         void            setType(const std::string& type);
         std::string     getType() const;
-        virtual void    makeSound() const;
+        virtual void    makeSound() const = 0;  // Pure virtual function (must be implemented by derived classes)
         static void     printStatus(const Animal& animal);
 };
 

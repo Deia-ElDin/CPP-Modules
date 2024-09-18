@@ -6,7 +6,6 @@
 
 int main()
 {
-    Animal* animal = new Animal();
     Dog* dog = new Dog();
     Cat* cat = new Cat();
     
@@ -14,21 +13,10 @@ int main()
     std::cout << cat->getType() << " " << std::endl;
     cat->makeSound();
     dog->makeSound();
-    animal->makeSound();
 
-    cat->setBrain();
-    dog->setBrain();
+    // Animal* animal = new Animal();
+    // animal->makeSound();
 
-    // cat->setIdea("I wanna eat fish");
-    // cat->setIdea("I wanna eat meat");
-
-    // dog->setIdea("I wanna eat bones");
-    // dog->setIdea("I wanna eat meat");
-
-    cat->printIdeas();
-    dog->printIdeas();
-
-    delete animal;
     delete dog;
     delete cat;
     
