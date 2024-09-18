@@ -6,9 +6,9 @@
 
 int main()
 {
-    const Animal* animal = new Animal();
-    const Animal* dog = new Dog();
-    const Animal* cat = new Cat();
+    Animal* animal = new Animal();
+    Dog* dog = new Dog();
+    Cat* cat = new Cat();
     
     std::cout << dog->getType() << " " << std::endl;
     std::cout << cat->getType() << " " << std::endl;
@@ -16,11 +16,21 @@ int main()
     dog->makeSound();
     animal->makeSound();
 
+    cat->setBrain();
+    dog->setBrain();
+
+    // cat->setIdea("I wanna eat fish");
+    // cat->setIdea("I wanna eat meat");
+
+    // dog->setIdea("I wanna eat bones");
+    // dog->setIdea("I wanna eat meat");
+
+    cat->printIdeas();
+    dog->printIdeas();
+
     delete animal;
     delete dog;
     delete cat;
-
-    const
     
     return 0;
 }

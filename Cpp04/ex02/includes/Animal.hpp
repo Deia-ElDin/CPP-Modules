@@ -1,8 +1,7 @@
 #ifndef __ANIMAL_HPP__
 # define __ANIMAL_HPP__
 
-#include <iostream>
-#include <string>
+#include "Brain.hpp"
 
 class Animal
 {
@@ -18,11 +17,8 @@ class Animal
 
         void            setType(const std::string& type);
         std::string     getType() const;
-        
         virtual void    makeSound() const;
-
-        static void     printMsg(const std::string& msg, const std::string& color);
         static void     printStatus(const Animal& animal);
 };
 
-#endif 
+#endif
