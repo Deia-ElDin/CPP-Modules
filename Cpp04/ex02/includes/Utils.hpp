@@ -4,10 +4,10 @@
 #include <iostream>
 #include <string>
 
-class Utils {
+class Utils 
+{
     public:
         static void printMsg(const std::string& msg, const std::string& color);
-        static void createIdeas(std::string ideas[100]);
 };
 
 #endif
