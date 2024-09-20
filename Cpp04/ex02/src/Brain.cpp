@@ -38,13 +38,13 @@ void    Brain::setIdea(const std::string& idea)
 
 void    Brain::setBrain(const std::string& animalType) {
     for (int i = 0; i < 100; ++i) {
-        ideas[i] = animalType + " idea " + std::to_string(i + 1);
+        ideas[i] = animalType + " idea";
     }
 }
 
 void    Brain::printIdeas() const {
     for (int i = 0; i < 100; ++i) {
         if (ideas[i].empty()) break;
-        Utils::printMsg("Idea " + std::to_string(i + 1) + ": " + ideas[i], "magenta");
+        Utils::printMsg("Idea: " + ideas[i], "magenta");
     }
 }

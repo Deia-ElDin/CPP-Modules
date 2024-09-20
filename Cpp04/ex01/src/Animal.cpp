@@ -38,3 +38,4 @@ std::string Animal::getType() const {
 void        Animal::makeSound() const {
     Utils::printMsg("Some generic animal sound!", "blue");
 }
+

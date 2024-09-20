@@ -1,21 +1,24 @@
 #include "Cat.hpp"
 
 Cat::Cat(): Animal() {
+    Utils::printMsg("Cat default constructor called", "yellow");
+
     this->type = "Cat";
     this->brain = new Brain();
-    Utils::printMsg("Cat default constructor called", "yellow");
 }
 
 Cat::Cat(const std::string& type): Animal(type) {
+    Utils::printMsg("Cat type constructor called", "yellow");
+
     this->type = type;
     this->brain = new Brain(); 
-    Utils::printMsg("Cat type constructor called", "yellow");
 }
 
 Cat::Cat(const Cat& other) : Animal(other) {
+    Utils::printMsg("Cat copy constructor called", "yellow");
+    
     this->type = other.type;
     this->brain = new Brain(*other.brain);
-    Utils::printMsg("Cat copy constructor called", "yellow");
 }
 
 Cat&   Cat::operator=(const Cat& other) {
@@ -40,18 +43,17 @@ void    Cat::makeSound() const {
     Utils::printMsg("Meow Meow!", "blue");
 }
 
-void    Cat::setIdea(const std::string& idea) {
+void    Cat::setIdea(const std::string& idea) const {
     this->brain->setIdea(idea);
 }
 
-void    Cat::setBrain(void) {
-    this->brain->setBrain("Cat");
+void    Cat::setBrain(void) const {
+    this->brain->setBrain(this->type);
 }
 
 void    Cat::printIdeas(void) const {
     this->brain->printIdeas();
 }
-
 
 /*
     -   Base class assignment (Animal::operator=(other)): 

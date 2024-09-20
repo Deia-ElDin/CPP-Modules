@@ -7,8 +7,8 @@ SRC = main.cpp \
 	src/Utils.cpp \
 	src/Brain.cpp \
 	src/Animal.cpp \
-	src/Dog.cpp \
 	src/Cat.cpp \
+	src/Dog.cpp \
 	src/WrongAnimal.cpp \
 	src/WrongCat.cpp
 OBJ = $(SRC:.cpp=.o)

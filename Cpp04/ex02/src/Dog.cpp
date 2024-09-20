@@ -1,21 +1,24 @@
 #include "Dog.hpp"
 
 Dog::Dog(): Animal() {
+    Utils::printMsg("Dog default constructor called", "yellow");
+
     this->type = "Dog";
     this->brain = new Brain();
-    Utils::printMsg("Dog default constructor called", "yellow");
 }
 
 Dog::Dog(const std::string& type): Animal(type) {
+    Utils::printMsg("Dog type constructor called", "yellow");
+
     this->type = type;
     this->brain = new Brain(); 
-    Utils::printMsg("Dog type constructor called", "yellow");
 }
 
 Dog::Dog(const Dog& other) : Animal(other) {
+    Utils::printMsg("Dog copy constructor called", "yellow");
+    
     this->type = other.type;
     this->brain = new Brain(*other.brain);
-    Utils::printMsg("Dog copy constructor called", "yellow");
 }
 
 Dog&   Dog::operator=(const Dog& other) {
@@ -37,14 +40,14 @@ Dog::~Dog() {
 }
 
 void    Dog::makeSound() const {
-    Utils::printMsg("Bark!", "blue");
+    Utils::printMsg("Woof!", "blue");
 }
 
-void    Dog::setIdea(const std::string& idea) {
+void    Dog::setIdea(const std::string& idea) const {
     this->brain->setIdea(idea);
 }
 
-void    Dog::setBrain(void) {
+void    Dog::setBrain(void) const {
     this->brain->setBrain(this->type);
 }
 

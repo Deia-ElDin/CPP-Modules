@@ -28,5 +28,5 @@ Dog::~Dog() {
 }
 
 void    Dog::makeSound() const {
-    printMsg("Bark!", "blue");
+    printMsg("Woof!", "blue");
 }

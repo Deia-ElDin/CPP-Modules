@@ -5,20 +5,20 @@
 
 class Dog : public Animal
 {
-    private:
-		Brain* brain;
+	private:
+			Brain*	brain;
 
-    public:
-        Dog();                              // Default constructor
-        Dog(const std::string& type);       // Parametric constructor
-        Dog(const Dog& other);              // Copy constructor
-        Dog& operator=(const Dog& other);   // Copy assignment operator
-        virtual ~Dog();                     // Destructor
+	public:
+		Dog();                              // Default constructor
+		Dog(const std::string& type);       // Parametric constructor
+		Dog(const Dog& other);              // Copy constructor
+		Dog& operator=(const Dog& other);   // Copy assignment operator
+		virtual ~Dog();                     // Destructor
 
-        void    makeSound() const;  			// Virtual function
-        void    setIdea(const std::string& idea);
-        void    setBrain();
-        void    printIdeas() const;
+		void    makeSound() const;  		// Virtual function
+		void    setIdea(const std::string& idea) const;
+		void    setBrain() const;
+		void    printIdeas() const;
 };
 
 #endif 
