@@ -35,11 +35,11 @@ int main() {
 
     2-  Polymorphic Behavior:
 
-        -   Since std::exception is the base class and TooHighException and TooLowException derive from it, catching by reference (std::exception&) allows the catch block to handle any exception derived from std::exception.
+        -   Since std::exception is the base class and GradeTooHighException and GradeTooLowException derive from it, catching by reference (std::exception&) allows the catch block to handle any exception derived from std::exception.
     
         -   The what() method, if overridden in a derived class, will be correctly called due to the virtual mechanism, even though you are catching the exception as a reference to the base class (std::exception).
     
     3-  Using what():
 
-        -   e.what() will call the overridden what() method of the actual exception class (e.g., TooHighException or TooLowException), which provides the specific error message defined in those classes.
+        -   e.what() will call the overridden what() method of the actual exception class (e.g., GradeTooHighException or GradeTooLowException), which provides the specific error message defined in those classes.
 */

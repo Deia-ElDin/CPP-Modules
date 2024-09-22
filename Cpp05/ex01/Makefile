@@ -3,7 +3,7 @@ NAME = prog
 CXX = c++
 CXXFLAGS = -Wall -Wextra -Werror -std=c++98 -Iincludes
 
-SRC = main.cpp src/Utils.cpp src/Bureaucrat.cpp
+SRC = main.cpp src/Utils.cpp src/Bureaucrat.cpp src/Form.cpp
 
 OBJ = $(SRC:.cpp=.o)
 
