@@ -24,8 +24,24 @@ int main() {
     //     Utils::printErr(e.what());
     // }
 
-    Form a("Form A", false, 140, 130);
-    Form b = a;
+    try {
+        Bureaucrat deia("Deia", 2);
+        Form formA("Form-A", false, 1, 30);
+
+        formA.beSigned(deia);
+        formA.printSignedState();
+
+        std::cout << deia << std::endl;
+        deia.incrementGrade();
+        std::cout << deia << std::endl;
+
+        formA.beSigned(deia);
+        formA.printSignedState();
+
+    } catch (std::exception &e) {
+        Utils::printErr(e.what());
+    }
+    // Form b = a;
 
     return 0;
 }

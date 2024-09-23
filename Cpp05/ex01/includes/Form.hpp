@@ -2,6 +2,7 @@
 #define __FORM_HPP__
 
 #include "Utils.hpp"
+#include "Bureaucrat.hpp"
 
 class Form
 {
@@ -12,6 +13,7 @@ class Form
 		const int			_executeGrade;
 
 	public:
+		Form();
 		Form(
 			const std::string& name,
 			bool isSigned,
@@ -22,24 +24,24 @@ class Form
 		Form& operator=(const Form& other);
 		~Form();
 
-		void				setName(const std::string& name);
-		void				setIsSigned(bool isSigned);
-		void				setSignGrade(const int signGrade);
-		void				setExecuteGrade(const int executeGrade);
-		void				setForm(const std::string& name,
-									bool isSigned,
-									const int signGrade,
-									const int executeGrade);
+		void    			beSigned(Bureaucrat &bureaucrat);
 								
 		const std::string	getName() const;
 		bool				getIsSigned() const;
-		const int			getSignGrade() const;
-		const int			getExecuteGrade() const;
+		int					getSignGrade() const;
+		int					getExecuteGrade() const;
 
-		class NameException: public std::exception {
+		void    			printSignedState();
+
+		class SignedFormException : public std::exception {
 			public:
 				virtual const char* what() const _NOEXCEPT;
-		}
+		};
+
+		class EmptyNameException : public std::exception {
+			public:
+				virtual const char* what() const _NOEXCEPT;
+		};
 
 		class GradeTooHighException : public std::exception {
             public:
