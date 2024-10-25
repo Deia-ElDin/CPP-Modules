@@ -1,7 +1,6 @@
 #ifndef __FORM_HPP__
 #define __FORM_HPP__
 
-#include "Utils.hpp"
 #include "Bureaucrat.hpp"
 
 class Form
@@ -15,30 +14,27 @@ class Form
 	public:
 		Form();
 		Form(
-			const std::string& name,
-			bool isSigned,
-			const int signGrade,
-			const int executeGrade
+			const std::string&	name,
+			bool 				isSigned,
+			const int 			signGrade,
+			const int 			executeGrade
 		);
 		Form(const Form& other);
 		Form& operator=(const Form& other);
 		~Form();
 
 		void    			beSigned(Bureaucrat &bureaucrat);
-								
 		const std::string	getName() const;
 		bool				getIsSigned() const;
 		int					getSignGrade() const;
 		int					getExecuteGrade() const;
 
-		void    			printSignedState();
-
-		class SignedFormException : public std::exception {
+		class EmptyNameException : public std::exception {
 			public:
 				virtual const char* what() const _NOEXCEPT;
 		};
 
-		class EmptyNameException : public std::exception {
+		class SignedFormException : public std::exception {
 			public:
 				virtual const char* what() const _NOEXCEPT;
 		};
@@ -54,6 +50,6 @@ class Form
         };
 };
 
-// std::ostream& operator<<(stdLLostream& os, const Form& form);
+std::ostream& operator<<(std::ostream& os, const Form& form);
 
 #endif // __FORM_HPP__

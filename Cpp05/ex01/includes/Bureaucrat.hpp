@@ -3,11 +3,12 @@
 
 #include "Utils.hpp"
 
-class Bureaucrat {
+class Bureaucrat 
+{
     private:
-    const std::string   _name;
-    int                 _grade;
-    
+        const std::string   _name;
+        int                 _grade;
+        
     public:
         Bureaucrat();
         Bureaucrat(const std::string& name, int grade);

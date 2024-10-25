@@ -47,11 +47,10 @@ void    Bureaucrat::decrementGrade() {
 }
 
 void    Bureaucrat::signForm(bool isSigned, const std::string &formName) const {
-
     if (isSigned)
         Utils::printMsg(_name + " signed " + formName, "green");
     else 
-        Utils::printMsg(_name + " couldn’t sign " + formName + " because his grade is too low", "red"); 
+        Utils::printMsg(_name + " couldn’t sign " + formName + " because his grade is too low (" + Utils::toStr(_grade) + ").", "red"); 
 }
 
 const char* Bureaucrat::GradeTooHighException::what() const _NOEXCEPT {

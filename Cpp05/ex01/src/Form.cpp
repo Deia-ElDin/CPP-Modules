@@ -6,21 +6,17 @@ Form::Form()
 }
 
 Form::Form(
-    const std::string& name,
-    bool isSigned,
-    const int signGrade,
-    const int executeGrade
+    const std::string&  name,
+    bool                isSigned,
+    const int           signGrade,
+    const int           executeGrade
 ) : _name(name), _isSigned(isSigned), _signGrade(signGrade), _executeGrade(executeGrade) {
     Utils::printMsg("Form parameter constructor called", "yellow");
 
-    if (name.empty())
-        throw EmptyNameException();
-    else if (isSigned) 
-        throw SignedFormException();
-    else if (signGrade < 1 || executeGrade < 1) 
-        throw GradeTooHighException(); 
-    else if (signGrade > 150 || executeGrade > 150) 
-        throw GradeTooLowException();
+    if (name.empty()) throw EmptyNameException();
+    else if (isSigned) throw SignedFormException();
+    else if (signGrade < 1 || executeGrade < 1) throw GradeTooHighException(); 
+    else if (signGrade > 150 || executeGrade > 150) throw GradeTooLowException();
 }
 
 Form::Form(const Form& other)
@@ -34,9 +30,7 @@ Form::Form(const Form& other)
 Form& Form::operator=(const Form& other) {
     Utils::printMsg("Form assignation operator called", "yellow");
 
-    if (this != &other) {
-        this->_isSigned = other._isSigned;
-    }
+    if (this != &other) _isSigned = other._isSigned;
     return *this;
 }
 
@@ -52,17 +46,18 @@ bool    Form::getIsSigned() const {
     return _isSigned;
 }
 
-int   Form::getSignGrade() const {
+int     Form::getSignGrade() const {
     return _signGrade;
 }
 
-int   Form::getExecuteGrade() const {
+int     Form::getExecuteGrade() const {
     return _executeGrade;
 }
 
 void    Form::beSigned(Bureaucrat &bureaucrat) {
-    if (bureaucrat.getGrade() <= _signGrade)
-        _isSigned = true;
+    if (_isSigned) return (Utils::printMsg("Form already Signed.", "red"));
+
+    if (bureaucrat.getGrade() <= _signGrade) _isSigned = true;
     bureaucrat.signForm(_isSigned, _name);
 }
 
@@ -82,12 +77,12 @@ const char* Form::GradeTooLowException::what() const _NOEXCEPT {
     return "Error: Grade is too low!";
 }
 
-void    Form::printSignedState() {
-    if (_isSigned)
-        Utils::printMsg("Form signed state = True", "green");
-    else
-        Utils::printMsg("Form signed state = False", "red");
+std::ostream& operator<<(std::ostream& os, const Form& form) {
+    os 
+    << "Form Name: " << form.getName() << ".\n" 
+    << "Form Signed State: " << (form.getIsSigned() ? "True" : "False")  << ".\n"
+    << "Form Sign Grade: " << form.getSignGrade() << ".\n"
+    << "Form Execute State: " << form.getExecuteGrade() << ".\n";
+
+    return os;
 }
-// std::ostream& operator<<(std::ostream& os, const Form& form) {
-//     os << form.getName() << f
-// }

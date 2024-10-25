@@ -1,45 +1,41 @@
 #include "Bureaucrat.hpp"
 #include "Form.hpp"
 
-int main() {
-    // try {
-    //     Bureaucrat deia("Deia", 2);
-    //     std::cout << deia << std::endl;
-
-    //     deia.incrementGrade();
-    //     std::cout << deia << std::endl;
-
-    //     deia.incrementGrade();  
-    //     std::cout << deia << std::endl;
-    // } catch (std::exception& e) {
-    //     Utils::printErr(e.what());
-    // }
-
-    // try {
-    //     Bureaucrat ahmed("Ahmed", 150);
-    //     std::cout << ahmed << std::endl;
-
-    //     ahmed.decrementGrade();
-    // } catch (std::exception& e) {
-    //     Utils::printErr(e.what());
-    // }
+void    testSignedForm() {
     try {
-        Bureaucrat deia("Deia", 2);
-        Form formA("Form-A", false, 1, 30);
+        Bureaucrat  deia("Deia", 2);
+        Form        formA("Form-A", true, 1, 30);
+    } catch (std::exception &e) {
+        Utils::printErr(e.what());
+    }
+}
+
+void    testSigning() {
+    try {
+        Bureaucrat  deia("Deia", 2);
+        Form        formA("Form-A", false, 1, 30);
 
         formA.beSigned(deia);
-        formA.printSignedState();
+        std::cout << formA << std::endl;
 
         std::cout << deia << std::endl;
         deia.incrementGrade();
         std::cout << deia << std::endl;
 
         formA.beSigned(deia);
-        formA.printSignedState();
+        std::cout << formA << std::endl;
 
+        formA.beSigned(deia);
+        std::cout << formA << std::endl;
     } catch (std::exception &e) {
         Utils::printErr(e.what());
     }
+}
+
+int main() {
+    int test = 2;
+
+    test == 1 ? testSignedForm(): testSigning();
     return 0;
 }
 
