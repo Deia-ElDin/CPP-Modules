@@ -2,7 +2,7 @@
 
 int main() {
     try {
-        Bureaucrat deia("Deia", 2);
+        Bureaucrat deia("Deia", 1);
         std::cout << deia << std::endl;
 
         deia.incrementGrade();
@@ -14,20 +14,20 @@ int main() {
         Utils::printErr(e.what());
     }
 
-    try {
-        Bureaucrat ahmed("Ahmed", 150);
-        std::cout << ahmed << std::endl;
+    // try {
+    //     Bureaucrat ahmed("Ahmed", 150);
+    //     std::cout << ahmed << std::endl;
 
-        ahmed.decrementGrade();
-    } catch (std::exception& e) {
-        Utils::printErr(e.what());
-    }
+    //     ahmed.decrementGrade();
+    // } catch (std::exception& e) {
+    //     Utils::printErr(e.what());
+    // }
 
     return 0;
 }
 
 /*
-    1-  td::exception& e:
+    1-  std::exception& e:
 
         -   The & indicates that you are catching the exception by reference. This means that e is a reference to the original exception object that was thrown, not a copy.
 
