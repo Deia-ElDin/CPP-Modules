@@ -33,7 +33,6 @@ class Bureaucrat {
 
 std::ostream& operator<<(std::ostream& os, const Bureaucrat& bureaucrat);
 
-
 #endif // __BUREAUCRAT_HPP__
 
 /*

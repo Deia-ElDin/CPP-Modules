@@ -23,7 +23,6 @@ int main() {
     // } catch (std::exception& e) {
     //     Utils::printErr(e.what());
     // }
-
     try {
         Bureaucrat deia("Deia", 2);
         Form formA("Form-A", false, 1, 30);
@@ -41,13 +40,11 @@ int main() {
     } catch (std::exception &e) {
         Utils::printErr(e.what());
     }
-    // Form b = a;
-
     return 0;
 }
 
 /*
-    1-  td::exception& e:
+    1-  std::exception& e:
 
         -   The & indicates that you are catching the exception by reference. This means that e is a reference to the original exception object that was thrown, not a copy.
 

@@ -20,6 +20,7 @@ Fixed::Fixed() : _fixedPointValue(0) {
 Fixed::Fixed(const int value) {
     printMsg("Int constructor called", "yellow");
     this->_fixedPointValue = value << _fractionalBits;
+    std::cout << "Value: " << value << " Fixed: " << this->_fixedPointValue << std::endl;
 }                
 
 Fixed::Fixed(const float value) {
