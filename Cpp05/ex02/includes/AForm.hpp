@@ -1,9 +1,12 @@
-#ifndef __FORM_HPP__
-#define __FORM_HPP__
+#ifndef __A_FORM_HPP__
+#define __A_FORM_HPP__
 
+#include "Utils.hpp"
 #include "Bureaucrat.hpp"
 
-class Form
+class Bureaucrat;
+
+class AForm
 {
 	private:
 		const std::string	_name;
@@ -12,21 +15,23 @@ class Form
 		const int			_executeGrade;
 
 	public:
-		Form();
-		Form(
+		AForm();
+		AForm(
 			const std::string&	name,
 			const int 			signGrade,
 			const int 			executeGrade
 		);
-		Form(const Form& other);
-		Form& operator=(const Form& other);
-		~Form();
+		AForm(const AForm& other);
+		AForm& operator=(const AForm& other);
+		~AForm();
 
 		void    			beSigned(Bureaucrat &bureaucrat);
 		const std::string	getName() const;
 		bool				getIsSigned() const;
 		int					getSignGrade() const;
 		int					getExecuteGrade() const;
+
+		virtual void		execute(const Bureaucrat& executor) const = 0; // Abstract the Class Abstract
 
 		class EmptyNameException : public std::exception {
 			public:
@@ -47,8 +52,13 @@ class Form
             public:
                 virtual const char* what() const _NOEXCEPT;
         };
+
+		class FormNotSignedException : public std::exception {
+			public:
+				virtual const char* what() const _NOEXCEPT;
+		};
 };
 
-std::ostream& operator<<(std::ostream& os, const Form& form);
+std::ostream& operator<<(std::ostream& os, const AForm& form);
 
-#endif // __FORM_HPP__
+#endif // __A_FORM_HPP__

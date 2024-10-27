@@ -1,11 +1,11 @@
-#include "Form.hpp"
+#include "AForm.hpp"
 
-Form::Form()
+AForm::AForm()
     : _name("Default Form"), _isSigned(false), _signGrade(150), _executeGrade(150) {
     Utils::printMsg("Form default constructor called", "yellow");
 }
 
-Form::Form(
+AForm::AForm(
     const std::string&  name,
     const int           signGrade,
     const int           executeGrade
@@ -17,7 +17,7 @@ Form::Form(
     else if (signGrade > 150 || executeGrade > 150) throw GradeTooLowException();
 }
 
-Form::Form(const Form& other)
+AForm::AForm(const AForm& other)
     : _name(other._name), 
       _isSigned(other._isSigned), 
       _signGrade(other._signGrade), 
@@ -25,34 +25,34 @@ Form::Form(const Form& other)
     Utils::printMsg("Form copy constructor called", "yellow");
 }
 
-Form& Form::operator=(const Form& other) {
+AForm& AForm::operator=(const AForm& other) {
     Utils::printMsg("Form assignation operator called", "yellow");
 
     if (this != &other) _isSigned = other._isSigned;
     return *this;
 }
 
-Form::~Form() {
+AForm::~AForm() {
     Utils::printMsg("Form destructor called", "purple");
 }
 
-const   std::string	Form::getName() const {
+const   std::string	AForm::getName() const {
     return _name;
 }
 
-bool    Form::getIsSigned() const {
+bool    AForm::getIsSigned() const {
     return _isSigned;
 }
 
-int     Form::getSignGrade() const {
+int     AForm::getSignGrade() const {
     return _signGrade;
 }
 
-int     Form::getExecuteGrade() const {
+int     AForm::getExecuteGrade() const {
     return _executeGrade;
 }
 
-void    Form::beSigned(Bureaucrat &bureaucrat) {
+void    AForm::beSigned(Bureaucrat &bureaucrat) {
     if (_isSigned) return (Utils::printMsg("Form already Signed.", "red"));
 
     if (bureaucrat.getGrade() <= _signGrade) _isSigned = true;
@@ -69,28 +69,32 @@ void    Form::beSigned(Bureaucrat &bureaucrat) {
                         + " because his grade is too low (" + bureaucratGrade + ").", "red"); 
 }
 
-const char* Form::SignedFormException::what() const _NOEXCEPT {
+const char* AForm::SignedFormException::what() const _NOEXCEPT {
     return "Error: You can't initialize a signed form!";
 }
 
-const char* Form::EmptyNameException::what() const _NOEXCEPT {
+const char* AForm::EmptyNameException::what() const _NOEXCEPT {
     return "Error: name is required!";
 }
 
-const char* Form::GradeTooHighException::what() const _NOEXCEPT {
+const char* AForm::GradeTooHighException::what() const _NOEXCEPT {
     return "Error: Grade is too high!";
 }
 
-const char* Form::GradeTooLowException::what() const _NOEXCEPT {
+const char* AForm::GradeTooLowException::what() const _NOEXCEPT {
     return "Error: Grade is too low!";
 }
 
-std::ostream& operator<<(std::ostream& os, const Form& form) {
+const char* AForm::FormNotSignedException::what() const _NOEXCEPT {
+    return "Error: The form is not signed!";
+}
+
+std::ostream& operator<<(std::ostream& os, const AForm& form) {
     os 
-    << "Form Name: " << form.getName() << ".\n" 
+    << "\nForm Name: " << form.getName() << ".\n" 
     << "Form Signed State: " << (form.getIsSigned() ? "True" : "False")  << ".\n"
     << "Form Sign Grade: " << form.getSignGrade() << ".\n"
-    << "Form Execute Grade: " << form.getExecuteGrade() << ".\n";
+    << "Form Execute Grade: " << form.getExecuteGrade() << ".";
 
     return os;
 }

@@ -1,17 +1,8 @@
 #include "Bureaucrat.hpp"
 #include "Form.hpp"
 
-void    testSignedForm() {
-    try {
-        Bureaucrat  deia("Deia", 2);
-        Form        formA("Form-A", true, 1, 30);
-    } catch (std::exception &e) {
-        Utils::printErr(e.what());
-    }
-}
-
-void    testSigning() {
-    try {
+int main() {
+     try {
         Bureaucrat  deia("Deia", 2);
         Form        formA("Form-A", false, 1, 30);
 
@@ -30,12 +21,7 @@ void    testSigning() {
     } catch (std::exception &e) {
         Utils::printErr(e.what());
     }
-}
 
-int main() {
-    int test = 2;
-
-    test == 1 ? testSignedForm(): testSigning();
     return 0;
 }
 
