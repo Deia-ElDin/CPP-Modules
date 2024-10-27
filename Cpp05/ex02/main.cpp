@@ -19,8 +19,8 @@ int main() {
 
 void    testShrubbery() {
     try {
-    Bureaucrat              deia("Deia", 146);
-    // Bureaucrat              deia("Deia", 138);
+    // Bureaucrat              deia("Deia", 146);
+    Bureaucrat              deia("Deia", 138);
     ShrubberyCreationForm   formA("Form-A");
 
     std::cout << formA << std::endl;
@@ -58,8 +58,8 @@ void    testRobotomy() {
 
 void    testPresidential() {
       try {
-        // Bureaucrat              deia("Deia", 25);
-        Bureaucrat              deia("Deia", 5);
+        Bureaucrat              deia("Deia", 25);
+        // Bureaucrat              deia("Deia", 5);
         PresidentialPardonForm  formC("Form-C");
 
         std::cout << formC << std::endl;
