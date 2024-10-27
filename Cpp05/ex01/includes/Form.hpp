@@ -1,7 +1,10 @@
 #ifndef __FORM_HPP__
 #define __FORM_HPP__
 
+#include "Utils.hpp"
 #include "Bureaucrat.hpp"
+
+class Bureaucrat;
 
 class Form
 {

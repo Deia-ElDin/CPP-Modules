@@ -2,26 +2,23 @@
 #include "Form.hpp"
 
 int main() {
-     try {
-        Bureaucrat  deia("Deia", 2);
-        Form        formA("Form-A", false, 1, 30);
+    try {
+        Bureaucrat  deia("Deia", 4);
+        Form        form("Form-A", 3, 3);
 
-        formA.beSigned(deia);
-        std::cout << formA << std::endl;
+        deia.signForm(form);
+        std::cout << form << std::endl;
 
         std::cout << deia << std::endl;
+
         deia.incrementGrade();
         std::cout << deia << std::endl;
 
-        formA.beSigned(deia);
-        std::cout << formA << std::endl;
-
-        formA.beSigned(deia);
-        std::cout << formA << std::endl;
-    } catch (std::exception &e) {
+        deia.signForm(form);
+        std::cout << form << std::endl;
+    } catch (const std::exception& e) {
         Utils::printErr(e.what());
     }
-
     return 0;
 }
 

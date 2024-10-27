@@ -52,21 +52,12 @@ int     Form::getExecuteGrade() const {
     return _executeGrade;
 }
 
-void    Form::beSigned(Bureaucrat &bureaucrat) {
-    if (_isSigned) return (Utils::printMsg("Form already Signed.", "red"));
+void    Form::beSigned(Bureaucrat& bureaucrat) {
+    if (_isSigned) return (Utils::printMsg("Form already signed.", "red"));
 
-    if (bureaucrat.getGrade() <= _signGrade) _isSigned = true;
+    if (bureaucrat.getGrade() > _signGrade) throw GradeTooLowException(); 
 
-    std::string bureaucratName = bureaucrat.getName();
-    std::string bureaucratGrade = Utils::toStr(bureaucrat.getGrade());
-
-    if (_isSigned)
-        Utils::printMsg(bureaucratName + " signed " + _name, "green");
-    else 
-        Utils::printMsg(bureaucratName 
-                        + " couldn’t sign " 
-                        + _name 
-                        + " because his grade is too low (" + bureaucratGrade + ").", "red"); 
+    _isSigned = true;  
 }
 
 const char* Form::SignedFormException::what() const _NOEXCEPT {
