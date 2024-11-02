@@ -14,14 +14,14 @@ int main() {
         Utils::printErr(e.what());
     }
 
-    // try {
-    //     Bureaucrat ahmed("Ahmed", 150);
-    //     std::cout << ahmed << std::endl;
+    try {
+        Bureaucrat ahmed("Ahmed", 150);
+        std::cout << ahmed << std::endl;
 
-    //     ahmed.decrementGrade();
-    // } catch (std::exception& e) {
-    //     Utils::printErr(e.what());
-    // }
+        ahmed.decrementGrade();
+    } catch (std::exception& e) {
+        Utils::printErr(e.what());
+    }
 
     return 0;
 }

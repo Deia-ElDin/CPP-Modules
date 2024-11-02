@@ -53,24 +53,15 @@ int     AForm::getExecuteGrade() const {
 }
 
 void    AForm::beSigned(Bureaucrat &bureaucrat) {
-    if (_isSigned) return (Utils::printMsg("Form already Signed.", "red"));
+    if (_isSigned) throw SignedFormException();
 
-    if (bureaucrat.getGrade() <= _signGrade) _isSigned = true;
+    if (bureaucrat.getGrade() > _signGrade) throw GradeTooLowException(); 
 
-    std::string bureaucratName = bureaucrat.getName();
-    std::string bureaucratGrade = Utils::toStr(bureaucrat.getGrade());
-
-    if (_isSigned)
-        Utils::printMsg(bureaucratName + " signed " + _name, "green");
-    else 
-        Utils::printMsg(bureaucratName 
-                        + " couldn’t sign " 
-                        + _name 
-                        + " because his grade is too low (" + bureaucratGrade + ").", "red"); 
+    _isSigned = true;  
 }
 
 const char* AForm::SignedFormException::what() const _NOEXCEPT {
-    return "Error: You can't initialize a signed form!";
+    return "Error: Form already signed!";
 }
 
 const char* AForm::EmptyNameException::what() const _NOEXCEPT {
@@ -91,10 +82,10 @@ const char* AForm::FormNotSignedException::what() const _NOEXCEPT {
 
 std::ostream& operator<<(std::ostream& os, const AForm& form) {
     os 
-    << "\nForm Name: " << form.getName() << ".\n" 
-    << "Form Signed State: " << (form.getIsSigned() ? "True" : "False")  << ".\n"
-    << "Form Sign Grade: " << form.getSignGrade() << ".\n"
-    << "Form Execute Grade: " << form.getExecuteGrade() << ".";
+    << "Form Name: " << form.getName() << "." 
+    << " Signed State: " << (form.getIsSigned() ? "True" : "False")  << "."
+    << " Sign Grade: " << form.getSignGrade() << "."
+    << " Execute Grade: " << form.getExecuteGrade() << ".";
 
     return os;
 }

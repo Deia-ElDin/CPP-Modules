@@ -23,7 +23,9 @@ Bureaucrat& Bureaucrat::operator=(const Bureaucrat& other) {
     Utils::printMsg("Bureaucrat assignation operator called", "yellow");
 
     if (this != &other) _grade = other._grade; 
-    return *this;
+    return *this; 
+    // return a reference to the object itself, not just a copy of it.
+    // allows for chained assignments (a = b = c).
 }
 
 Bureaucrat::~Bureaucrat() {
@@ -54,7 +56,7 @@ const char*         Bureaucrat::GradeTooLowException::what() const _NOEXCEPT {
     return "Error: Grade is too low!";
 }
 
-std::ostream&   operator<<(std::ostream& os, const Bureaucrat& bureaucrat) {
+std::ostream&       operator<<(std::ostream& os, const Bureaucrat& bureaucrat) {
     os << bureaucrat.getName() << ", bureaucrat grade " << bureaucrat.getGrade() << ".";
     return os;
 }

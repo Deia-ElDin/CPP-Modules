@@ -13,7 +13,7 @@ void    Utils::printMsg(const std::string& msg, const std::string& color) {
     else if (color == "cyan") textColor = "\033[36m";
     else if (color == "purple") textColor = "\033[35m"; 
 
-    std::string fullMsg = "\n" + textBold + textColor + msg + textReset;
+    std::string fullMsg = textBold + textColor + msg + textReset;
     std::cout << fullMsg << std::endl;
 }
 

@@ -19,21 +19,22 @@ int main() {
 
 void    testShrubbery() {
     try {
-    // Bureaucrat              deia("Deia", 146);
-    Bureaucrat              deia("Deia", 138);
-    ShrubberyCreationForm   formA("Form-A");
+        Bureaucrat              deia("Deia", 146);
+        // Bureaucrat              deia("Deia", 138);
+        ShrubberyCreationForm   formA("Form-A");
 
-    std::cout << formA << std::endl;
-    formA.beSigned(deia);
-    std::cout << formA << std::endl;
+        std::cout << formA << std::endl;
+        deia.signForm(formA);
+        std::cout << formA << std::endl;
 
-    std::cout << deia << std::endl;
-    deia.incrementGrade();
-    std::cout << deia << std::endl;
+        std::cout << deia << std::endl;
+        deia.incrementGrade();
+        std::cout << deia << std::endl;
 
-    formA.beSigned(deia);
-    deia.executeForm(formA);
-    std::cout << formA << std::endl;
+        deia.signForm(formA);
+        deia.executeForm(formA);
+
+        std::cout << formA << std::endl;
 
     } catch (std::exception &e) {
         Utils::printErr(e.what());
@@ -47,7 +48,7 @@ void    testRobotomy() {
         RobotomyRequestForm      formB("Form-B");
 
         std::cout << formB << std::endl;
-        formB.beSigned(deia);
+        deia.signForm(formB);
         std::cout << formB << std::endl;
 
         deia.executeForm(formB);
@@ -63,7 +64,7 @@ void    testPresidential() {
         PresidentialPardonForm  formC("Form-C");
 
         std::cout << formC << std::endl;
-        formC.beSigned(deia);
+        deia.signForm(formC);
         std::cout << formC << std::endl;
 
         deia.executeForm(formC);

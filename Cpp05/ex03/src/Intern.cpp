@@ -19,21 +19,33 @@ Intern::~Intern() {
     Utils::printMsg("Intern destructor called.", "purple");
 }
 
-AForm* Intern::makeForm(const std::string& formName, const std::string& target) const {
-    if (formName == "shrubbery creation") {
-        Utils::printMsg("Intern creates ShrubberyCreationForm", "cyan");
-        return new ShrubberyCreationForm(target);
-    } 
-    else if (formName == "robotomy request") {
-        Utils::printMsg("Intern creates RobotomyRequestForm", "cyan");
-        return new RobotomyRequestForm(target);
-    } 
-    else if (formName == "presidential pardon") {
-        Utils::printMsg("Intern creates PresidentialPardonForm", "cyan");
-        return new PresidentialPardonForm(target);
-    } 
-    else {
-        Utils::printErr("Error: Form name '" + formName + "' is invalid.");
-        return nullptr;
+AForm*  createShrubberyForm(const std::string& target) {
+    return new ShrubberyCreationForm(target);
+}
+
+AForm*  createRobotomyForm(const std::string& target) {
+    return new RobotomyRequestForm(target);
+}
+
+AForm*  createPardonForm(const std::string& target) {
+    return new PresidentialPardonForm(target);
+}
+
+AForm*  Intern::makeForm(const std::string& formName, const std::string& target) const {
+    std::string formTypes[3] = {"shrubbery creation", "robotomy request", "presidential pardon"};
+
+    AForm* (*formCreators[3])(const std::string&) = {
+        createShrubberyForm,
+        createRobotomyForm,
+        createPardonForm
+    };
+
+    for (int i = 0; i < 3; i++) {
+        if (formName == formTypes[i]) {
+            std::cout << "Intern creates " << formName << std::endl;
+            return formCreators[i](target);
+        }
     }
+    std::cout << "Error: Form name '" << formName << "' not recognized." << std::endl;
+    return nullptr;
 }

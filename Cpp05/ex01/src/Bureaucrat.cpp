@@ -22,8 +22,10 @@ Bureaucrat::Bureaucrat(const Bureaucrat& other)
 Bureaucrat& Bureaucrat::operator=(const Bureaucrat& other) {
     Utils::printMsg("Bureaucrat assignation operator called", "yellow");
 
-    if (this != &other) _grade = other._grade; // only grade is assignable since _name is const
+    if (this != &other) _grade = other._grade;
     return *this;
+    // return a reference to the object itself, not just a copy of it.
+    // allows for chained assignments (a = b = c).
 }
 
 Bureaucrat::~Bureaucrat() {
