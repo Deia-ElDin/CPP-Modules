@@ -48,5 +48,5 @@ AForm*  Intern::makeForm(const std::string& formName, const std::string& target)
     }
 
     Utils::printErr("Error: Form name '" + formName + "' not recognized.");
-    return 0;
+    return NULL;
 }
