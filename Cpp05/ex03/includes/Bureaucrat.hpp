@@ -27,12 +27,12 @@ class Bureaucrat
 
         class GradeTooHighException : public std::exception {
             public:
-                virtual const char* what() const _NOEXCEPT;
+                virtual const char* what() const throw();
         };
 
         class GradeTooLowException : public std::exception {
             public:
-                virtual const char* what() const _NOEXCEPT;
+                virtual const char* what() const throw();
         };
 };
 
@@ -50,5 +50,5 @@ std::ostream& operator<<(std::ostream& os, const Bureaucrat& bureaucrat);
 
         -   what(): This is a standard function name for exception classes. It returns a C-style string (const char*) that describes the exception. This string is typically used to print an error message to the console. By overriding this method in your custom exception classes, you can provide a specific error message for each exception type.
 
-        -   _NOEXCEPT (or simply noexcept in modern C++) specifies that the method does not throw any exceptions. This is important for exception handling, ensuring that calling what() itself does not cause another exception.
+        -   throw() (or simply noexcept in modern C++) specifies that the method does not throw any exceptions. This is important for exception handling, ensuring that calling what() itself does not cause another exception.
 */

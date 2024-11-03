@@ -34,7 +34,7 @@ void    ShrubberyCreationForm::execute(Bureaucrat const & executor) const {
 
     if (executor.getGrade() > getExecuteGrade()) throw GradeTooLowException();
 
-    std::ofstream file(_target + "_shrubbery");
+    std::ofstream file((_target + "_shrubbery").c_str());
 
     if (!file) return (Utils::printErr("Error: Could not create the file."));
 

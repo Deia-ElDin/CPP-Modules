@@ -60,23 +60,23 @@ void    AForm::beSigned(Bureaucrat &bureaucrat) {
     _isSigned = true;  
 }
 
-const char* AForm::SignedFormException::what() const _NOEXCEPT {
+const char* AForm::SignedFormException::what() const throw() {
     return "Error: Form already signed!";
 }
 
-const char* AForm::EmptyNameException::what() const _NOEXCEPT {
+const char* AForm::EmptyNameException::what() const throw() {
     return "Error: name is required!";
 }
 
-const char* AForm::GradeTooHighException::what() const _NOEXCEPT {
+const char* AForm::GradeTooHighException::what() const throw() {
     return "Error: Grade is too high!";
 }
 
-const char* AForm::GradeTooLowException::what() const _NOEXCEPT {
+const char* AForm::GradeTooLowException::what() const throw() {
     return "Error: Grade is too low!";
 }
 
-const char* AForm::FormNotSignedException::what() const _NOEXCEPT {
+const char* AForm::FormNotSignedException::what() const throw() {
     return "Error: The form is not signed!";
 }
 

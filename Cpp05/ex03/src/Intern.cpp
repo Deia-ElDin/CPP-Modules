@@ -42,10 +42,11 @@ AForm*  Intern::makeForm(const std::string& formName, const std::string& target)
 
     for (int i = 0; i < 3; i++) {
         if (formName == formTypes[i]) {
-            std::cout << "Intern creates " << formName << std::endl;
+            Utils::printMsg("Intern creates " + formName, "green");
             return formCreators[i](target);
         }
     }
-    std::cout << "Error: Form name '" << formName << "' not recognized." << std::endl;
-    return nullptr;
+
+    Utils::printErr("Error: Form name '" + formName + "' not recognized.");
+    return 0;
 }

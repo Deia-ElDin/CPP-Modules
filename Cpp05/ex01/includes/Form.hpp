@@ -33,22 +33,22 @@ class Form
 
 		class EmptyNameException : public std::exception {
 			public:
-				virtual const char* what() const _NOEXCEPT;
+				virtual const char* what() const throw();
 		};
 
 		class SignedFormException : public std::exception {
 			public:
-				virtual const char* what() const _NOEXCEPT;
+				virtual const char* what() const throw();
 		};
 
 		class GradeTooHighException : public std::exception {
             public:
-                virtual const char* what() const _NOEXCEPT;
+                virtual const char* what() const throw();
         };
 
         class GradeTooLowException : public std::exception {
             public:
-                virtual const char* what() const _NOEXCEPT;
+                virtual const char* what() const throw();
         };
 };
 
