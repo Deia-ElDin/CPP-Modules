@@ -5,11 +5,12 @@
 #include <string>
 #include <stdexcept>
 #include <sstream> 
+#include <limits>	// For std::numeric_limits<char>
+#include <cstdlib>	// For std::atoi
 
 class Utils 
 {
 	public:
-		static void	parseString(const std::string& str);
 		static void printMsg(const std::string& msg, const std::string& color);
 		static void printErr(const std::string& msg);
 		static void	convertToChar(const std::string& str);

@@ -5,12 +5,12 @@ ScalarConverter::ScalarConverter() {
 }
 
 ScalarConverter::ScalarConverter(const ScalarConverter& other) {
-    void(other);
+    (void)other; 
     Utils::printMsg("ScalarConverter copy constructor called", "yellow");
 }
 
 ScalarConverter& ScalarConverter::operator=(const ScalarConverter& other) {
-    void(other);
+    (void)other; 
     Utils::printMsg("ScalarConverter assignment operator called", "yellow");
     return *this;
 }

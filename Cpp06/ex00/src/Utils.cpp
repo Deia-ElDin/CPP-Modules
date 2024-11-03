@@ -1,9 +1,5 @@
 #include "Utils.hpp"
 
-std::string	Utils::parseString(const std::string& str) {
-	return (str != nullptr) ? str : "";
-}
-
 void		Utils::printMsg(const std::string& msg, const std::string& color) {
 	std::string textBold = "\033[1m";
 	std::string textColor = "\033[37m"; // Default white
@@ -29,11 +25,30 @@ void		Utils::printErr(const std::string& msg) {
 	std::cerr << fullMsg << std::endl;
 }
 
-void   		Utils::convertToChar(const std::string& str) {
-	std::string	baseStr = "char: ";
 
-	if (str[0] < 31 || str[0] > 126 || str.length() > 1)
-		return (Utils::printMsg(baseStr + "Non displayable", "red"));
+void Utils::convertToChar(const std::string& str) {
+    std::string baseStr = "char: ";
+
+    if (str.length() == 1) {
+        char charValue = str[0];
+        if (charValue >= 32 && charValue <= 126)
+            Utils::printMsg(baseStr + "'" + str + "'", "green");
+		else 
+            Utils::printMsg(baseStr + "Non displayable", "red");
+        
+    } else {
+        int intValue = std::atoi(str.c_str());
+        if (intValue >= std::numeric_limits<char>::min() && intValue <= std::numeric_limits<char>::max()) {
+            char charValue = static_cast<char>(intValue);
+            if (charValue >= 32 && charValue <= 126) {
+                Utils::printMsg(baseStr + "'" + std::string(1, charValue) + "'", "green");
+            } else {
+                Utils::printMsg(baseStr + "Non displayable", "red");
+            }
+        } else {
+            Utils::printMsg(baseStr + "impossible", "red");
+        }
+    }
 }
 
 // void   		Utils::convertToInt(const std::string& str);
