@@ -9,7 +9,7 @@ void    testRobotomy();
 void    testPresidential();
 
 int main() {
-    int test = 3;
+    int test = 1;
 
     if (test == 1) testShrubbery();
     else if (test == 2) testRobotomy();

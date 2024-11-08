@@ -6,7 +6,7 @@ Intern::Intern() {
 
 Intern::Intern(const Intern& other) {
     Utils::printMsg("Intern copy constructor called.", "yellow");
-    *this = other;
+    (void)other;
 }
 
 Intern& Intern::operator=(const Intern& other) {

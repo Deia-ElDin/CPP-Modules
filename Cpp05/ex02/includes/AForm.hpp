@@ -23,7 +23,7 @@ class AForm
 		);
 		AForm(const AForm& other);
 		AForm& operator=(const AForm& other);
-		~AForm();
+		virtual ~AForm();
 
 		void    			beSigned(Bureaucrat &bureaucrat);
 		const std::string	getName() const;
@@ -31,7 +31,7 @@ class AForm
 		int					getSignGrade() const;
 		int					getExecuteGrade() const;
 
-		virtual void		execute(const Bureaucrat& executor) const = 0; // Abstract the Class Abstract
+		virtual void		execute(const Bureaucrat& executor) const = 0; // Abstract the Class
 
 		class EmptyNameException : public std::exception {
 			public:
