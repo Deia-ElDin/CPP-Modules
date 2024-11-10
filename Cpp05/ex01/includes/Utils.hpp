@@ -7,8 +7,8 @@
 
 namespace Utils 
 {
-    void printMsg(const std::string& msg, const std::string& color);
-    void printErr(const std::string& msg);
+    void    printMsg(const std::string& msg, const std::string& color);
+    void    printErr(const std::string& msg);
 
     template <typename T>
     std::string toStr(T value) {
