@@ -1,4 +1,8 @@
 #include "Intern.hpp"
+#include "ShrubberyCreationForm.hpp"
+#include "RobotomyRequestForm.hpp"
+#include "PresidentialPardonForm.hpp"
+#include "Utils.hpp"
 
 Intern::Intern() {
     Utils::printMsg("Intern default constructor called.", "yellow");

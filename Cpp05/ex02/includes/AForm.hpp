@@ -1,8 +1,10 @@
 #ifndef __A_FORM_HPP__
 #define __A_FORM_HPP__
 
-#include "Utils.hpp"
 #include "Bureaucrat.hpp"
+#include <string>
+#include <iostream>
+#include <exception>
 
 class Bureaucrat;
 

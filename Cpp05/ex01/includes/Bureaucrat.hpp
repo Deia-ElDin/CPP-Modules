@@ -2,8 +2,11 @@
 #define __BUREAUCRAT_HPP__
 
 #include "Form.hpp"
+#include <iostream>
+#include <string>
+#include <exception>
 
-class Form;
+class Form; // Forward declaration
 
 class Bureaucrat 
 {
@@ -41,13 +44,15 @@ std::ostream& operator<<(std::ostream& os, const Bureaucrat& bureaucrat);
 #endif // __BUREAUCRAT_HPP__
 
 /*
-    virtual const char* what() const throw();
+    Avoiding Circular Dependency:
+        -   The Form class includes Bureaucrat.hpp (or vice versa in Bureaucrat.hpp), which can lead to circular dependencies if both headers include each other.
+        -   A forward declaration tells the compiler that Bureaucrat is a class, allowing Form to reference it in function parameters without including Bureaucrat.hpp.
 
-        -   virtual: This means the function can be overridden in derived classes, which is essential for polymorphic behavior. When an exception is caught, the correct what() function (based on the actual type of the exception object) will be called.
-
-        -   const: The function does not modify the object it is called on. This is because what() should only provide information about the exception and not alter the state of the object.
-
-        -   what(): This is a standard function name for exception classes. It returns a C-style string (const char*) that describes the exception. This string is typically used to print an error message to the console. By overriding this method in your custom exception classes, you can provide a specific error message for each exception type.
-
-        -   throw() (or simply noexcept in modern C++) specifies that the method does not throw any exceptions. This is important for exception handling, ensuring that calling what() itself does not cause another exception.
+    Minimizing Header Inclusion:
+        -   Including Bureaucrat.hpp in Form.hpp makes Form.hpp dependent on all of Bureaucrat.hpp's includes, increasing compile time and dependencies.
+        -   With the forward declaration, Form only needs to know that Bureaucrat exists (not its implementation), allowing us to delay the actual inclusion of Bureaucrat.hpp until the .cpp file.
+    
+    Usage Context:
+        -   You can use a forward declaration when you only reference the class in a pointer, reference, or function parameter (as in void beSigned(Bureaucrat &bureaucrat);).
+        -   If you need to access any members or functions of Bureaucrat directly in Form.hpp, you’d need to include Bureaucrat.hpp instead.
 */

@@ -1,4 +1,5 @@
 #include "Form.hpp"
+#include "Utils.hpp"
 
 Form::Form()
     : _name("Default Form"), _isSigned(false), _signGrade(150), _executeGrade(150) {

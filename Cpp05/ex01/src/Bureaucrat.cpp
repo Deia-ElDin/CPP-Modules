@@ -1,4 +1,5 @@
 #include "Bureaucrat.hpp"
+#include "Utils.hpp"
 
 Bureaucrat::Bureaucrat() : _name("default"), _grade(150) {
     Utils::printMsg("Bureaucrat default constructor called", "yellow");

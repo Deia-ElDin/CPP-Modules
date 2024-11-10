@@ -3,31 +3,19 @@
 
 #include <iostream>
 #include <string>
-#include <stdexcept>
 #include <sstream> 
 
-class Utils 
+namespace Utils 
 {
-	private:
-		Utils();
-		Utils(const Utils&); // unnamed parameter because we won't define the function
-		Utils& operator=(const Utils&);
-		~Utils();
+    void printMsg(const std::string& msg, const std::string& color);
+    void printErr(const std::string& msg);
 
-	public:
-		static void printMsg(const std::string& msg, const std::string& color);
-		static void printErr(const std::string& msg);
-
-		template <typename T>
-		static std::string  toStr(T value);
-};
-
-template <typename T>
-std::string	Utils::toStr(T value) {
-	std::stringstream ss;
-
-	ss << value;
-	return ss.str();
+    template <typename T>
+    std::string toStr(T value) {
+        std::stringstream ss;
+        ss << value;
+        return ss.str();
+    }
 }
 
-#endif
+#endif // __UTILS_HPP__

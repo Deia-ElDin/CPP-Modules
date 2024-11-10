@@ -2,6 +2,7 @@
 # define __ROBOTOMY_REQUEST_FORM__
 
 #include "AForm.hpp"
+#include <string>
 
 class RobotomyRequestForm : public AForm
 {

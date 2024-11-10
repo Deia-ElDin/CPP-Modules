@@ -1,8 +1,10 @@
 #ifndef __A_FORM_HPP__
 #define __A_FORM_HPP__
 
-#include "Utils.hpp"
 #include "Bureaucrat.hpp"
+#include <string>
+#include <iostream>
+#include <exception>
 
 class Bureaucrat;
 
@@ -31,7 +33,7 @@ class AForm
 		int					getSignGrade() const;
 		int					getExecuteGrade() const;
 
-		virtual void		execute(const Bureaucrat& executor) const = 0; // Abstract the Class Abstract
+		virtual void		execute(const Bureaucrat& executor) const = 0; // Abstract the Class
 
 		class EmptyNameException : public std::exception {
 			public:

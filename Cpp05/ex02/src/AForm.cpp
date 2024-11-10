@@ -1,4 +1,5 @@
 #include "AForm.hpp"
+#include "Utils.hpp"
 
 AForm::AForm()
     : _name("Default Form"), _isSigned(false), _signGrade(150), _executeGrade(150) {

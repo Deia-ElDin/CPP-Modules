@@ -2,6 +2,7 @@
 # define __PRESIDENTIAL_PARDON_FORM__
 
 #include "AForm.hpp"
+#include <string>
 
 class PresidentialPardonForm : public AForm 
 {

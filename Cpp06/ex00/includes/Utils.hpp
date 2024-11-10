@@ -10,6 +10,12 @@
 
 class Utils 
 {
+	private:
+		Utils();
+		Utils(const Utils&); // unnamed parameter because we won't define the function
+		Utils& operator=(const Utils&);
+		~Utils();
+		
 	public:
 		static void printMsg(const std::string& msg, const std::string& color);
 		static void printErr(const std::string& msg);

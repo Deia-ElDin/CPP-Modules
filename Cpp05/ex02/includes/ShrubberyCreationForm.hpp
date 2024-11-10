@@ -2,6 +2,8 @@
 # define __SHRUBBERY_CREATION_FORM__
 
 #include "AForm.hpp"
+#include <string>
+#include <fstream> 	// For file handling
 
 class ShrubberyCreationForm : public AForm 
 {

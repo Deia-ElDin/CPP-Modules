@@ -2,9 +2,6 @@
 # define __INTERN__
 
 #include "AForm.hpp"
-#include "ShrubberyCreationForm.hpp"
-#include "RobotomyRequestForm.hpp"
-#include "PresidentialPardonForm.hpp"
 
 class Intern 
 {
