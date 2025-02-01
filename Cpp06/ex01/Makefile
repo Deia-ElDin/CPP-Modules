@@ -4,9 +4,9 @@ CXX = c++
 
 CXXFLAGS = -Wall -Wextra -Werror -std=c++98 -Iincludes
 
-CPP_SRCS = main.cpp src/Utils.cpp src/ScalarConverter.cpp
+HPP_SRC = includes/Utils.hpp includes/ScalarConverter.hpp includes/Serializer.hpp
 
-HPP_SRC = includes/Utils.hpp includes/ScalarConverter.hpp
+CPP_SRCS = main.cpp src/Utils.cpp src/ScalarConverter.cpp src/Serializer.cpp
 
 OBJS = $(CPP_SRCS:.cpp=.o)
 
@@ -18,8 +18,8 @@ $(NAME): $(OBJS)
 
 all: $(NAME)
 
-# run: $(NAME) clean
-# 	@./$(NAME)
+run: $(NAME) clean
+	@./$(NAME)
 
 clean:
 	@rm -f $(OBJS)

@@ -31,16 +31,16 @@ static std::string getStr(const std::string& str, const std::string& target, con
 
 static void printChar(double value) {
     if (value < 0 || value > 127) 
-        Utils::printErr("char: impossible");
+        Utils::printMsg("char: impossible", "red");
     else if (value < 32 || value > 126) 
-        Utils::printErr("char: Non displayable"); 
+        Utils::printMsg("char: Non displayable", "red"); 
     else 
         Utils::printMsg("char: '" + Utils::toStr(static_cast<char>(value)) + "'", "green");
 }
 
 static void printInt(double value) {
     if (value > std::numeric_limits<int>::max() || value < std::numeric_limits<int>::min())
-        Utils::printErr("int: impossible");
+        Utils::printMsg("int: impossible", "red");
     else 
         Utils::printMsg("int: " + Utils::toStr(static_cast<int>(value)), "green");
 }
@@ -68,10 +68,10 @@ void ScalarConverter::convert(const std::string& str) {
         std::string float_str = getStr(str, "float", is_double_f);
         std::string double_str = getStr(str, "double", is_double_f);
 
-        Utils::printErr("char: impossible");
-        Utils::printErr("int: impossible");
-        Utils::printErr("float: " + float_str);
-        Utils::printErr("double: " + double_str);
+        Utils::printMsg("char: impossible", "red");
+        Utils::printMsg("int: impossible", "red");
+        Utils::printMsg("float: " + float_str, "red");
+        Utils::printMsg("double: " + double_str, "red");
         return;
     }
     

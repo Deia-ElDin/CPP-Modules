@@ -2,10 +2,8 @@
 #include "Utils.hpp"
 
 int main(int ac, char **av) {
-    if (ac != 2) {
-        std::cerr << "Usage: " << av[0] << " <literal>" << std::endl;
-        return 1;
-    }
+    if (ac != 2) 
+        return (Utils::printErr("you can't pass more than 1 argument"), 1);
     
     ScalarConverter::convert(av[1]);
     return 0;
