@@ -64,7 +64,7 @@ void ScalarConverter::convert(const std::string& str) {
     double  value = strtod(str.c_str(), &end);
 
     if (str == "nan" || str == "nanf" || str == "+inf" || str == "+inff" ||str == "-inf" || str == "-inff") {
-        const bool  is_double_f = str[str.length() - 1] == 'f' && str[str.length() - 2] == 'f';
+        const bool  is_double_f = str.substr(str.length() - 2) == "ff";
         std::string float_str = getStr(str, "float", is_double_f);
         std::string double_str = getStr(str, "double", is_double_f);
 
