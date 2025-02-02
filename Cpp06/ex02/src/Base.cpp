@@ -21,8 +21,7 @@ Base::~Base() {
 }
 
 Base* Base::generate(void) {
-    std::srand(static_cast<unsigned int>(std::time(0))); 
-    int random = std::rand() % 3;
+    int random = Utils::getRandomNumber();
     
     switch (random) {
         case 0:
@@ -67,3 +66,11 @@ void Base::identify(Base& p) {
         return;
     } catch (std::exception&) {}
 }
+
+/*
+    void Base::identify(Base* p)
+        If p actually points to an A object, this cast succeeds and returns a non-null pointer otherwise returns nullptr
+
+    void Base::identify(Base& p) 
+        If p is an A object, this cast succeeds.
+*/

@@ -24,3 +24,18 @@ void    Utils::printErr(const std::string& msg) {
 	std::string fullMsg = constructMsg(msg, "red");
 	std::cerr << fullMsg << std::endl;
 }
+
+int     Utils::getRandomNumber(void) {
+    std::srand(std::time(0));
+    return std::rand() % 3;
+}
+
+
+/*
+    How std::rand() Works Internally
+        Deterministic Algorithm:
+        std::rand() uses a mathematical formula called a pseudo-random number generator (PRNG). It’s called pseudo-random because the numbers only appear random but are actually determined by an initial value (the seed) and an internal formula.
+
+        Same Seed, Same Sequence:
+        If the seed value is the same every time the program starts, the PRNG will produce the same sequence of numbers.
+*/

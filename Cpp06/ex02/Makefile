@@ -4,9 +4,9 @@ CXX = c++
 
 CXXFLAGS = -Wall -Wextra -Werror -std=c++98 -Iincludes
 
-HPP_SRC = includes/Utils.hpp includes/ScalarConverter.hpp includes/Serializer.hpp
+HPP_SRC = includes/Utils.hpp includes/ScalarConverter.hpp includes/Serializer.hpp includes/Base.hpp
 
-CPP_SRCS = main.cpp src/Utils.cpp src/ScalarConverter.cpp src/Serializer.cpp
+CPP_SRCS = main.cpp src/Utils.cpp src/ScalarConverter.cpp src/Serializer.cpp src/Base.cpp
 
 OBJS = $(CPP_SRCS:.cpp=.o)
 
