@@ -1,26 +1,52 @@
-#include "whatever.hpp"
+#include "Iter.hpp"
 #include "Utils.hpp"
 
-int main( void ) {
-    int a = 2;
-    int b = 3;
+void    printInt(int& i) {
+    Utils::printMsg(Utils::toStr(i), "green");
+}
 
-    Utils::printMsg("a = " + Utils::toStr(a) + ", b = " + Utils::toStr(b), "red");
-    Utils::printMsg("\nSwapping a and b", "magenta");
-    ::swap(a, b);
-    Utils::printMsg("a = " + Utils::toStr(a) + ", b = " + Utils::toStr(b), "green");
-    Utils::printMsg("min(a, b) = " + Utils::toStr(::min(a, b)), "yellow");
-    Utils::printMsg("max(a, b) = " + Utils::toStr(::max(a, b)), "blue");
-       
-    std::string c = "chaine1";
-    std::string d = "chaine2";
+void    addOne(int& i) {
+    i++;
+}
 
-    Utils::printMsg("\n\nc = " + c + ", d = " + d, "red");
-    Utils::printMsg("\nSwapping a and b", "magenta");
-    ::swap(c, d);
-    Utils::printMsg("c = " + c + ", d = " + d, "green");
-    Utils::printMsg("min(c, d) = " + ::min(c, d), "yellow");
-    Utils::printMsg("max(c, d) = " + ::max(c, d), "blue");
-  
+void    addTwo(int& i) {
+    i += 2;
+}
+
+void    printStr(std::string& str) {
+    Utils::printMsg(str, "green");
+}
+
+void    shiftStrByOne(std::string& str) {
+    for (size_t i = 0; i < str.length(); i++) {
+        str[i] += 1;
+    }
+}
+
+
+int main() {
+    int arr[] = {1, 2, 3, 4, 5};
+
+    Utils::printMsg("Printing each element", "magenta");
+    iter(arr, 5, printInt);
+
+    Utils::printMsg("Adding 1 to each element", "magenta");
+    iter(arr, 5, addOne);
+    iter(arr, 5, printInt);
+
+    Utils::printMsg("Adding 2 to each element", "magenta");
+    iter(arr, 5, addTwo);
+    iter(arr, 5, printInt);
+
+    std::string arr2[] = {"one", "two", "three", "four", "five"};
+
+    Utils::printMsg("Printing each element", "magenta");
+    iter(arr2, 5, printStr);
+
+    // shift each char by 1
+    Utils::printMsg("Shifting each char by 1", "magenta");
+    iter(arr2, 5, shiftStrByOne);
+    iter(arr2, 5, printStr);
     return 0;
 }
+

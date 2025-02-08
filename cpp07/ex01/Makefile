@@ -4,7 +4,7 @@ CXX = c++
 
 CXXFLAGS = -Wall -Wextra -Werror -std=c++98 -Iincludes
 
-HPP_SRC = includes/Utils.hpp  includes/whatever.hpp
+HPP_SRC = includes/Utils.hpp includes/Iter.hpp
 
 CPP_SRCS = main.cpp src/Utils.cpp 
 

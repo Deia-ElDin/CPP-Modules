@@ -1,4 +1,4 @@
-#include "whatever.hpp"
+#include "Whatever.hpp"
 #include "Utils.hpp"
 
 int main( void ) {

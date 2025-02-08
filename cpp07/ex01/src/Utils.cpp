@@ -24,3 +24,4 @@ void    Utils::printErr(const std::string& msg) {
 	std::string fullMsg = constructMsg(msg, "red");
 	std::cerr << fullMsg << std::endl;
 }
+
