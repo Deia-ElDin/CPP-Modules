@@ -116,7 +116,6 @@ void    testFloat() {
         Utils::printMsg("float_arr[" + Utils::toStr(i) + "] = " + Utils::toStr(float_arr[i]), "green");
 }
 
-
 void    fillArray(Array<int>& arr) {
     for (unsigned int i = 0; i < arr.size(); i++)
         arr[i] = i + 1;
