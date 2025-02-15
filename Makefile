@@ -13,12 +13,12 @@ CPP_DIRS := $(wildcard Cpp*)
 # Default target
 all:
 	@echo "$(RED)$(YELLOW)Available commands:$(NC)"
-	@echo "$(GREEN)make clean$(NC)            - Clean all Cpp directories"
+	@echo "$(GREEN)make fclean$(NC)           - Clean all Cpp directories"
 	@echo "$(GREEN)make test$(NC)             - Test all Cpp directories"
 	@echo "$(GREEN)make test CppXX$(NC)       - Test specific module (e.g., Cpp07)"
 
 # Clean target
-clean:
+fclean:
 	@echo "$(YELLOW)Cleaning all Cpp directories...$(NC)"
 	@for cpp_dir in Cpp*/; do \
 		echo "$(GREEN)Entering directory: $(BLUE)$$cpp_dir$(NC)"; \
