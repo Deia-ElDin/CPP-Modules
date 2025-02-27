@@ -15,6 +15,7 @@ Span::Span(const Span& other): _N(other._N), _storage(other._storage) {
 
 Span& Span::operator=(const Span& other) {
     Utils::printMsg("Span assignment operator called", "yellow");
+
     if (this != &other) {
         _N = other._N; 
         _storage = other._storage;
@@ -36,6 +37,7 @@ void    Span::getActualSize() const {
 
 void    Span::getStorage() const {
     Utils::printMsg("Printing The Storage: ", "green");
+
     for (std::vector<int>::const_iterator it = _storage.begin(); it != _storage.end(); it++) {
         Utils::printMsg(Utils::toStr(*it), "green");
     }
@@ -60,6 +62,7 @@ int     Span::shortestSpan() const {
         int diff = sorted[i + 1] - sorted[i];
         if (diff < minSpan) minSpan = diff;
     }
+
     return minSpan;
 }
 
@@ -72,3 +75,5 @@ int Span::longestSpan() const {
 
     return maxVal - minVal;
 }
+
+// The reason for using *std::min_element(...) and *std::max_element(...) is because std::min_element and std::max_element return iterators, not actual values.

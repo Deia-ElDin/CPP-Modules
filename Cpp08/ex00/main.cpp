@@ -11,13 +11,11 @@ int main(void)
 {
     try {
         testVector();
-        Utils::printSeparator();
         testList();
-        Utils::printSeparator();
         testDeque();
     }
     catch(const std::exception& e) {
-        Utils::printErr("Unexpected error: Value not found in container");
+        Utils::printErr("Program Error: " + Utils::toStr(e.what()));
     }
     return 0;
 }
@@ -28,25 +26,19 @@ void    testVector(void)
 
     std::vector<int> vec;
 
-    int emptyValue = 1;
-    int testValue = 100;
-    int negativeValue = -10;
-    int outOfBoundaryValue = 1000;
-
     try {
-        easyfind(vec, emptyValue);
+        easyfind(vec, 1);
     } catch(const std::exception& e) {
-        Utils::printErr("Empty - empty vector: Value not found in the container");
+        Utils::printErr("Empty Error: " + Utils::toStr(e.what()));
     }
-
+    
     for (int i = 0; i < 20; ++i)
             vec.push_back(i * 10);
 
     Utils::printContainer("Vector", vec);
 
-
     try {
-        std::vector<int>::iterator it = easyfind(vec, testValue);
+        std::vector<int>::iterator it = easyfind(vec, 100);
         Utils::printMsg("Found value in vector: " + Utils::toStr(*it), "green");
     } catch(const std::exception& e) {
         Utils::printErr("Error: " + Utils::toStr(e.what()));
@@ -56,7 +48,7 @@ void    testVector(void)
         Utils::printTestTitle("Testing const vector");
 
         const std::vector<int>&             constVec = vec;
-        std::vector<int>::const_iterator    constIt = easyfind(constVec, testValue);
+        std::vector<int>::const_iterator    constIt = easyfind(constVec, 100);
 
         Utils::printContainer("Const Vector", constVec);
         Utils::printMsg("Found value in const vector: " + Utils::toStr(*constIt), "green");
@@ -66,17 +58,19 @@ void    testVector(void)
 
     try {
         Utils::printTestTitle("Testing vector with negative value");
-        easyfind(vec, negativeValue);
+        easyfind(vec, -10);
     } catch(const std::exception& e) {
         Utils::printErr("Error - negative value: " + Utils::toStr(e.what()));
     }
 
     try {
         Utils::printTestTitle("Testing vector with out of boundary value");
-        easyfind(vec, outOfBoundaryValue);
+        easyfind(vec, 1000);
     } catch(const std::exception& e) {
         Utils::printErr("Error - out of boundary value: " + Utils::toStr(e.what()));
     }
+
+    Utils::printSeparator();
 }
 
 void    testList(void)
@@ -97,6 +91,8 @@ void    testList(void)
     } catch(const std::exception& e) {
         Utils::printErr("Error finding 7: " + Utils::toStr(e.what()));
     }
+
+    Utils::printSeparator();
 }
 
 void    testDeque(void)
@@ -116,5 +112,15 @@ void    testDeque(void)
     } catch(const std::exception& e) {
         Utils::printErr("Error finding 7: " + Utils::toStr(e.what()));
     }
+
+    Utils::printSeparator();
 }
 
+
+// Feature	                            std::deque	             std::vector	     std::list
+// Random Access (O(1))	                ✅ Yes	                ✅ Yes	            ❌ No (O(n))
+// Insertion/Deletion at Front (O(1))	✅ Yes (push_front())	❌ No (O(n))        	✅ Yes
+// Insertion/Deletion at Back (O(1))	✅ Yes (push_back())	    ✅ Yes (push_back())	✅ Yes
+// Insertion/Deletion in Middle (O(n))	❌ No	                ❌ No	            ✅ Yes (O(1))
+// Contiguous Memory	                ❌ No (blocks)           ✅ Yes	            ❌ No (linked nodes)
+// Cache-Friendly	                    Medium                   ✅ High 	         ❌ Poor

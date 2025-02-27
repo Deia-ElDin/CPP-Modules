@@ -20,24 +20,6 @@ namespace Utils
         ss << value;
         return ss.str();
     }
-
-    template <typename T>
-    void printContainer(const std::string& name, const T& container) {
-        std::stringstream ss;
-        ss << name << ": [";
-        
-        typename T::const_iterator it = container.begin();
-        if (it != container.end()) {
-            ss << *it;
-            ++it;
-        }
-        while (it != container.end()) {
-            ss << ", " << *it;
-            ++it;
-        }
-        ss << "]";
-        printMsg(ss.str(), "cyan");
-    }
 }
 
 #endif
