@@ -116,7 +116,6 @@ void    testDeque(void)
     Utils::printSeparator();
 }
 
-
 // Feature	                            std::deque	             std::vector	     std::list
 // Random Access (O(1))	                ✅ Yes	                ✅ Yes	            ❌ No (O(n))
 // Insertion/Deletion at Front (O(1))	✅ Yes (push_front())	❌ No (O(n))        	✅ Yes
