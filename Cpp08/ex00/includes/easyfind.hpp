@@ -42,9 +42,8 @@ typename T::const_iterator easyfind(const T& container, int value) {
         -   Read or modify the elements they point to
 
     * What is the difference between array and vectors?
-        -   Array is a fixed size data structure while vector is a dynamic size data structure.
+        Array is a fixed size data structure while vector is a dynamic size data structure.
 
     * What is the difference between vector and list?
-        -   Vector is a sequence container that supports random access to elements, while list is a sequence container that supports only sequential access to elements.
+        Vector is a sequence container that supports random access to elements, while list is a sequence container that supports only sequential access to elements.
 */
-
