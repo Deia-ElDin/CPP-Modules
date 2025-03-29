@@ -26,6 +26,7 @@ BitcoinExchange::~BitcoinExchange() {
     Utils::printMsg("BitcoinExchange destructor", "magenta");
 }
 
+// Main parsing function
 void    BitcoinExchange::validateDatabaseFile(const std::string& filename) {
     std::ifstream file;
 
@@ -66,6 +67,8 @@ void    BitcoinExchange::validateUserInputFile(const std::string& filename) {
     }
 }
 
+
+// Helpers parsing functions
 void    BitcoinExchange::parseFile(std::ifstream& file, const std::string& filename) {
     Utils::openFile(file, filename);
 
@@ -104,7 +107,7 @@ void    BitcoinExchange::fillDbContainer(std::ifstream& file, const std::string&
         date = Utils::trim(date);
         rateStr = Utils::trim(rateStr);
         
-        float rate = std::strtof(rateStr.c_str(), NULL);
+        float rate = strtof(rateStr.c_str(), NULL);
         
         // just to make sure it's not the first line and there's prevDate t compare it with date.
         // if it's less than data it's not in chronological order
@@ -128,64 +131,65 @@ void    BitcoinExchange::parseInputFile(std::ifstream& file, const std::string& 
     Utils::openFile(file, filename);
 
     std::string line;
-    int         lineIdx = 0;
     bool        fileHasContent = false;
     
-    while (std::getline(file, line) && ++lineIdx) {
+    if (std::getline(file, line)) {
         std::string trimmedLine = Utils::trim(line);
-        Utils::parseUserInputFileLine(file, trimmedLine, lineIdx);
+        if (trimmedLine != "date | value") {
+            Utils::closeFileWithErr(file, "Invalid header in user input file. Expected 'date | value', got '" + trimmedLine + "'");
+        }
         fileHasContent = true;
     }
     
     if (!fileHasContent) 
-        Utils::closeFileWithErr(file, "File is empty or contains only headers: " + filename);
+        Utils::closeFileWithErr(file, "File is empty: " + filename);
 
     file.close();
 }
 
 void    BitcoinExchange::processInputFile(std::ifstream& file, const std::string& filename) {
-    Utils::openFile(file, filename, true);
+    Utils::openFile(file, filename, true); 
 
     std::string line;
+    int         lineIdx = 1;
     
     while (std::getline(file, line)) {
-        size_t      pipePos = line.find('|');
-        std::string date = Utils::trim(line.substr(0, pipePos));
-        std::string valueStr = Utils::trim(line.substr(pipePos + 1));
-        float       value = std::strtof(valueStr.c_str(), NULL);
-
-        float exchangeRate = getExchangeRate(date);
+        std::string date;
+        float value;
+        std::string errorMsg;
         
-        if (exchangeRate < 0) {
-            Utils::printErr("no exchange rate available for date: " + date);
-            continue;
+        if (Utils::parseUserInputFileLine(line, lineIdx++, date, value, errorMsg)) {
+            float exchangeRate = getExchangeRate(date);
+            
+            if (exchangeRate < 0) {
+                Utils::printErr("Error: no exchange rate available for date: " + date);
+            } else {
+                float result = value * exchangeRate;
+                Utils::printMsg(date + " => " + Utils::toStr(value) + " = " + Utils::toStr(result), "white");
+            }
+        } else if (!errorMsg.empty()) {
+            Utils::printErr("Error: " + errorMsg);
         }
-        
-        float result = value * exchangeRate;
-        std::cout << date << " => " << value << " = " << result << std::endl;
     }
 
     file.close();
 }
 
 float   BitcoinExchange::getExchangeRate(const std::string& date) const {
-    // First try to find the exact date
+    // First we try to find the exact date
     std::map<std::string, float>::const_iterator it = _exchangeRates.find(date);
-    if (it != _exchangeRates.end()) {
+    if (it != _exchangeRates.end()) 
         return it->second;
-    }
     
     // If the date is earlier than the first date in our database, return error value
     it = _exchangeRates.begin();
-    if (it != _exchangeRates.end() && date < it->first) {
+    if (date < it->first) 
         return -1.0f;  // Indicate that no exchange rate is available
-    }
     
     // Otherwise, find the closest date that is not greater than the given date
-    it = _exchangeRates.lower_bound(date);
-    if (it != _exchangeRates.begin() && (it == _exchangeRates.end() || it->first > date)) {
+    it = _exchangeRates.lower_bound(date); // returns an iterator (first entry not less than target)
+    if (it != _exchangeRates.begin() && (it == _exchangeRates.end() || it->first > date)) 
         --it;  // Get the previous element (closest lower date)
-    }
     
     return it->second;
 }

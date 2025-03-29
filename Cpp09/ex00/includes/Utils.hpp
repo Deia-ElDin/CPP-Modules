@@ -6,8 +6,7 @@
 #include <sstream> 
 #include <stdexcept> // std::runtime_error
 #include <fstream>  // std::ifstream
-#include <cstdlib>  // std::atoi
-#include <map>
+#include <cmath>
 
 namespace Utils 
 {
@@ -32,13 +31,18 @@ namespace Utils
     void        parseEmptyLine(std::ifstream& file, const std::string& trimmedLine, int lineIdx);
     
     // Values validations
-    void        parseDate(std::ifstream& file, const std::string& date, int lineIdx);
-    void        parseRate(std::ifstream& file, const std::string& rateStr, float& rate, int lineIdx);
+    void        parseDbFileDate(std::ifstream& file, const std::string& date, int lineIdx);
+    void        parseDbFileRate(std::ifstream& file, const std::string& rateStr, float& rate, int lineIdx);
     void        parseValue(std::ifstream& file, const std::string& valueStr, float& value, int lineIdx);
     
     // Parse line functions
     void        parseDbFileLine(std::ifstream& file, const std::string& trimmedLine, int lineIdx);
-    void        parseUserInputFileLine(std::ifstream& file, const std::string& trimmedLine, int lineIdx);
+    // void        parseUserInputFileLine(std::ifstream& file, const std::string& trimmedLine, int lineIdx);
+
+
+    bool        parseUserDate(const std::string& date, std::string& errorMsg);
+    bool        parseUserValue(const std::string& valueStr, float& value, std::string& errorMsg);
+    bool        parseUserInputFileLine(const std::string& line, int lineIdx, std::string& date, float& value, std::string& errorMsg);
 
     template <typename T>
     std::string toStr(T value) {
@@ -183,7 +187,7 @@ namespace Utils
 //         std::string valueStr = trim(trimmedLine.substr(pipePos + 1));
 //         float       value;
         
-//         parseDate(file, date, lineIdx);
+//         parseDbFileDate(file, date, lineIdx);
 //         parseValue(file, valueStr, value, lineIdx);
 
 //         fileHasContent = true;

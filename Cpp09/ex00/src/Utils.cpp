@@ -28,7 +28,7 @@ void                Utils::printErr(const std::string& msg) {
 }
 
 void                Utils::printSeparator(void) {
-	printMsg("----------------------------------------", "white");
+	printMsg(" ----------------------------------------", "white");
 }
 
 void                Utils::throwErr(const std::string& msg) {
@@ -99,9 +99,19 @@ void                Utils::parseCommas(std::ifstream& file, const std::string& t
     if (commaCount == 0 || commaCount > 1) {
         std::stringstream ss;
         if (commaCount == 0)
-            ss << "line " << lineIdx << "- Missing comma separator. Expected 'date,rate', got '" << trimmedLine << "'";
+            ss << "line " << lineIdx << " - Missing comma separator. Expected 'date,rate', got '" << trimmedLine << "'";
         else
-            ss << "line " << lineIdx << "- Too many commas. Expected 'date,rate', got '" << trimmedLine << "'";
+            ss << "line " << lineIdx << " - Too many commas. Expected 'date,rate', got '" << trimmedLine << "'";
+        closeFileWithErr(file, ss.str());
+    }
+
+    size_t commaPos = trimmedLine.find(',');
+    std::string datePart = trim(trimmedLine.substr(0, commaPos));
+    std::string ratePart = trim(trimmedLine.substr(commaPos + 1));
+    
+    if (datePart.empty() || ratePart.empty()) {
+        std::stringstream ss;
+        ss << "line " << lineIdx << " - Invalid format. Expected 'date,rate', got '" << trimmedLine << "'";
         closeFileWithErr(file, ss.str());
     }
 }
@@ -112,9 +122,9 @@ void                Utils::parsePipes(std::ifstream& file, const std::string& tr
     if (pipeCount == 0 || pipeCount > 1) {
         std::stringstream ss;
         if (pipeCount == 0)
-            ss << "line " << lineIdx << "- Missing pipe separator. Expected 'date | value', got '" << trimmedLine << "'";
+            ss << "line " << lineIdx << " - Missing pipe separator. Expected 'date | value', got '" << trimmedLine << "'";
         else
-            ss << "line " << lineIdx << "- Too many pipes. Expected 'date | value', got '" << trimmedLine << "'";
+            ss << "line " << lineIdx << " - Too many pipes. Expected 'date | value', got '" << trimmedLine << "'";
         closeFileWithErr(file, ss.str());
     }
 }
@@ -122,20 +132,20 @@ void                Utils::parsePipes(std::ifstream& file, const std::string& tr
 void                Utils::parseEmptyLine(std::ifstream& file, const std::string& trimmedLine, int lineIdx) {
     if (trimmedLine.empty()) {
         std::stringstream ss;
-        ss << "line " << lineIdx << "- Empty line or contains only whitespace";
+        ss << "line " << lineIdx << " - Empty line or contains only whitespace";
         closeFileWithErr(file, ss.str());
     }
 }
 
 
-// Values validations
-void                Utils::parseDate(std::ifstream& file, const std::string& date, int lineIdx) {
+// Datebase file validations
+void                Utils::parseDbFileDate(std::ifstream& file, const std::string& date, int lineIdx) {
     if (date.length() != 10 || date[4] != '-' || date[7] != '-' || date < "2009-01-03") {
         std::stringstream ss;
         if (date.length() != 10 || date[4] != '-' || date[7] != '-')
-            ss << "line " << lineIdx << "- Invalid date format '" << date << "'. Expected YYYY-MM-DD";
+            ss << "line " << lineIdx << " - Invalid date format '" << date << "'. Expected YYYY-MM-DD";
         else
-            ss << "line " << lineIdx << "- Invalid date '" << date << "'. Bitcoin didn't exist before January 3, 2009";
+            ss << "line " << lineIdx << " - Invalid date '" << date << "'. Bitcoin didn't exist before January 3rd, 2009";
 
         closeFileWithErr(file, ss.str());
     }
@@ -143,75 +153,141 @@ void                Utils::parseDate(std::ifstream& file, const std::string& dat
     int year, month, day;
 
     try {
-        year = std::atoi(date.substr(0, 4).c_str());
-        month = std::atoi(date.substr(5, 2).c_str());
-        day = std::atoi(date.substr(8, 2).c_str());
+        year = atoi(date.substr(0, 4).c_str());
+        month = atoi(date.substr(5, 2).c_str());
+        day = atoi(date.substr(8, 2).c_str());
     } catch (...) {
         std::stringstream ss;
-        ss << "line " << lineIdx << "- Invalid date format '" << date << "'. Expected YYYY-MM-DD";
+        ss << "line " << lineIdx << " - Invalid date format '" << date << "'. Expected YYYY-MM-DD";
         closeFileWithErr(file, ss.str());
     }
     
     if (year < 1 || month < 1 || month > 12 || day < 1 || day > 31) {
         std::stringstream ss;
-        ss << "line " << lineIdx << "- Invalid date values in '" << date << "'";
+        ss << "line " << lineIdx << " - Invalid date values in '" << date << "'";
         closeFileWithErr(file, ss.str());
     }
     
     if (month == 4 || month == 6 || month == 9 || month == 11) {
         if (day > 30) {
             std::stringstream ss;
-            ss << "line " << lineIdx << "- Invalid day value in '" << date << "'. Month " << month << " has only 30 days";
+            ss << "line " << lineIdx << " - Invalid day value in '" << date << "'. Month " << month << " has only 30 days";
             closeFileWithErr(file, ss.str());
         }
     } else if (month == 2) {
         bool isLeapYear = (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0));
         if (day > (isLeapYear ? 29 : 28)) {
             std::stringstream ss;
-            ss << "line " << lineIdx << "- Invalid day value in '" << date << "'. February " << year;
+            ss << "line " << lineIdx << " - Invalid day value in '" << date << "'. February " << year;
             ss << (isLeapYear ? " (leap year) has only 29 days" : " has only 28 days");
             closeFileWithErr(file, ss.str());
         }
     }
 }
 
-void                Utils::parseRate(std::ifstream& file, const std::string& rateStr, float& rate, int lineIdx) {
-    char* endptr;
-    rate = std::strtof(rateStr.c_str(), &endptr);
-    
-    if (*endptr != '\0' || rate < 0 || rate > 1000000.0f) {
+void                Utils::parseDbFileRate(std::ifstream& file, const std::string& rateStr, float& rate, int lineIdx) {
+    if (rateStr.find("0x") != std::string::npos || 
+        rateStr.find("0X") != std::string::npos ||
+        rateStr.find("p+") != std::string::npos ||
+        rateStr.find("p-") != std::string::npos) {
         std::stringstream ss;
-        if (*endptr != '\0') // we check for parsing errors
+        ss << "line " << lineIdx << "- Invalid exchange rate format '" << rateStr << "'. Hexadecimal notation not allowed";
+        closeFileWithErr(file, ss.str());
+    }
+    
+    char* endptr;
+    rate = strtof(rateStr.c_str(), &endptr);
+    
+    if (*endptr != '\0' || rate < 0 || rate > 1000000.0f || std::isnan(rate) || std::isinf(rate)) {
+        std::stringstream ss;
+        if (*endptr != '\0')
             ss << "line " << lineIdx << "- Invalid exchange rate format '" << rateStr << "'. Expected a number";
-        else if (rate < 0) // we check for negative values
+        else if (std::isnan(rate))
+            ss << "line " << lineIdx << "- Invalid exchange rate '" << rateStr << "'. NaN is not allowed";
+        else if (std::isinf(rate))
+            ss << "line " << lineIdx << "- Invalid exchange rate '" << rateStr << "'. Infinity is not allowed";
+        else if (rate < 0)
             ss << "line " << lineIdx << "- Invalid exchange rate '" << rateStr << "'. Value cannot be negative";
-        else // we check for unreasonably large values
+        else
             ss << "line " << lineIdx << "- Unreasonably large exchange rate '" << rateStr << "'";
         closeFileWithErr(file, ss.str());
     }
 }
 
-void                Utils::parseValue(std::ifstream& file, const std::string& valueStr, float& value, int lineIdx) {
+
+// User Input File validations
+bool                Utils::parseUserDate(const std::string& date, std::string& errorMsg) {
+    // Check format
+    if (date.length() != 10 || date[4] != '-' || date[7] != '-') {
+        errorMsg = "bad input => " + date;
+        return false;
+    }
+    
+    // Parse components
+    int year, month, day;
+    try {
+        year = atoi(date.substr(0, 4).c_str());
+        month = atoi(date.substr(5, 2).c_str());
+        day = atoi(date.substr(8, 2).c_str());
+    } catch (...) {
+        errorMsg = "bad input => " + date;
+        return false;
+    }
+    
+    // Check ranges
+    if (year < 1 || month < 1 || month > 12 || day < 1 || day > 31) {
+        errorMsg = "bad input => " + date;
+        return false;
+    }
+    
+    // Check month days
+    if ((month == 4 || month == 6 || month == 9 || month == 11) && day > 30) {
+        errorMsg = "bad input => " + date;
+        return false;
+    } else if (month == 2) {
+        bool isLeapYear = (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0));
+        if (day > (isLeapYear ? 29 : 28)) {
+            errorMsg = "bad input => " + date;
+            return false;
+        }
+    }
+    
+    return true;
+}
+
+bool                Utils::parseUserValue(const std::string& valueStr, float& value, std::string& errorMsg) {
     if (valueStr.empty()) {
-        std::stringstream ss;
-        ss << "Line " << lineIdx << " is missing a value after '|'";
-        closeFileWithErr(file, ss.str());
+        errorMsg = "bad input";
+        return false;
+    }
+    
+    if (valueStr.find("0x") != std::string::npos || 
+        valueStr.find("0X") != std::string::npos ||
+        valueStr.find("p+") != std::string::npos ||
+        valueStr.find("p-") != std::string::npos) {
+        errorMsg = "bad input";
+        return false;
     }
     
     char* endptr;
-    value = std::strtof(valueStr.c_str(), &endptr);
+    value = strtof(valueStr.c_str(), &endptr);
     
-    if (*endptr != '\0' || value < 0 || value > 1000) {
-        std::stringstream ss;
-        if (*endptr != '\0') {
-            ss << "Line " << lineIdx << " has invalid value format. Expected a number, got '" << valueStr << "'";
-        } else if (value < 0) {
-            ss << "Line " << lineIdx << " has negative value: " << value << ". Value must be positive.";
-        } else {
-            ss << "Line " << lineIdx << " has value exceeding maximum: " << value << ". Maximum allowed is 1000.";
-        }
-        closeFileWithErr(file, ss.str());
+    if (*endptr != '\0' || isnan(value) || isinf(value)) {
+        errorMsg = "bad input";
+        return false;
     }
+    
+    if (value < 0) {
+        errorMsg = "not a positive number";
+        return false;
+    }
+    
+    if (value > 1000) {
+        errorMsg = "too large a number";
+        return false;
+    }
+    
+    return true;
 }
 
 
@@ -229,42 +305,63 @@ void                Utils::parseDbFileLine(std::ifstream& file, const std::strin
 
     if (!std::getline(iss, date, ',')) {
         std::stringstream ss;
-        ss << "line " << lineIdx << "- Missing date field. Expected 'date,rate', got '" << trimmedLine << "'";
+        ss << "line " << lineIdx << " - Missing date field. Expected 'date,rate', got '" << trimmedLine << "'";
         closeFileWithErr(file, ss.str());
     }
 
     date = trim(date);
-    parseDate(file, date, lineIdx);
+    parseDbFileDate(file, date, lineIdx);
 
 
 
     if (!std::getline(iss, rateStr)) {
         std::stringstream ss;
-        ss << "line " << lineIdx << "- Missing rate field. Expected 'date,rate', got '" << trimmedLine << "'";
+        ss << "line " << lineIdx << " - Missing rate field. Expected 'date,rate', got '" << trimmedLine << "'";
         closeFileWithErr(file, ss.str());
     }
     
     rateStr = trim(rateStr);
-    parseRate(file, rateStr, rate, lineIdx);
+    parseDbFileRate(file, rateStr, rate, lineIdx);
 }
 
-void                Utils::parseUserInputFileLine(std::ifstream& file, const std::string& trimmedLine, int lineIdx) {
-    if (lineIdx == 1) 
-       return (parseFileHeader(file, trimmedLine, "date | value"));
-    parseEmptyLine(file, trimmedLine, lineIdx);
-    parsePipes(file, trimmedLine, lineIdx);
-
-    size_t pipePos = trimmedLine.find('|');
-    if (pipePos == std::string::npos) {
-        std::stringstream ss;
-        ss << "Line " << lineIdx << " has invalid format. Expected 'date | value', got '" << trimmedLine << "'";
-        closeFileWithErr(file, ss.str());
+bool                Utils::parseUserInputFileLine(const std::string& line, int lineIdx, std::string& date, float& value, std::string& errorMsg) {
+    std::string trimmedLine = trim(line);
+    
+    if (lineIdx == 1 && trimmedLine == "date | value") 
+        return false; 
+    
+    if (trimmedLine.empty()) {
+        errorMsg = "bad input => " + line;
+        return false;
     }
     
-    std::string date = trim(trimmedLine.substr(0, pipePos));
+    size_t pipePos = trimmedLine.find('|');
+    if (pipePos == std::string::npos) {
+        errorMsg = "bad input => " + line;
+        return false;
+    }
+
+    date = trim(trimmedLine.substr(0, pipePos));
     std::string valueStr = trim(trimmedLine.substr(pipePos + 1));
-    float       value;
     
-    parseDate(file, date, lineIdx);
-    parseValue(file, valueStr, value, lineIdx);
+    if (date.empty() || valueStr.empty()) {
+        errorMsg = "bad input => " + line;
+        return false;
+    }
+    
+    if (!parseUserDate(date, errorMsg)) {
+        if (errorMsg.find("bad input =>") == std::string::npos)
+            errorMsg = "bad input => " + line;
+        return false;
+    }
+    
+    if (!parseUserValue(valueStr, value, errorMsg)) {
+        if (errorMsg == "bad input" || errorMsg == "not a valid number") {
+            errorMsg = "bad input => " + line;
+        }
+        return false;
+    }
+
+    
+    return true;
 }

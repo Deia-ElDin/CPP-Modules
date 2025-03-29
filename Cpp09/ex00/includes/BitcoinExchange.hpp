@@ -1,15 +1,12 @@
 #ifndef __BITCOIN_EXCHANGE_HPP__
 #define __BITCOIN_EXCHANGE_HPP__
 
-#include <iostream> // std::cout, std::cerr
 #include <string>   // std::string
 #include <map>      // std::map
 #include <fstream>  // std::ifstream
-#include <sstream>  // std::istringstream
-#include <cstdlib>  // std::exit
-#include <iomanip>  // std::setprecision, std::fixed
 
-class BitcoinExchange {
+class BitcoinExchange 
+{
     private:
         std::map<std::string, float> _exchangeRates;
     
@@ -34,6 +31,6 @@ class BitcoinExchange {
         
         // Get exchange rate for a specific date
         float getExchangeRate(const std::string& date) const;
-    };
+};
 
 #endif
