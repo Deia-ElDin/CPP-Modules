@@ -9,25 +9,31 @@
 #include <cstdlib>  // std::exit
 #include <iomanip>  // std::setprecision, std::fixed
 
-class BitcoinExchange 
-{
+class BitcoinExchange {
     private:
-        std::map<std::string, float> exchangeRates;
+        std::map<std::string, float> _exchangeRates;
+    
+        // Db Validation
+        void validateDatabaseFile(const std::string& filename);
+        void parseFile(std::ifstream& file, const std::string& filename);
+        void fillDbContainer(std::ifstream& file, const std::string& filename);
         
-        bool        isValidDate(const std::string& date) const;
-        bool        isValidValue(const float value) const;
-        std::string findClosestDate(const std::string& date) const;
-        bool        parseExchangeRateDB(const std::string& filename);
-        void        processInputLine(const std::string& line);
-
+        // User input file Validation
+        void parseInputFile(std::ifstream& file, const std::string& filename);
+        void processInputFile(std::ifstream& file, const std::string& filename);
+        
     public:
         BitcoinExchange();
         BitcoinExchange(const std::string& databaseFile);
-        ~BitcoinExchange();
         BitcoinExchange(const BitcoinExchange& other);
         BitcoinExchange& operator=(const BitcoinExchange& other);
+        ~BitcoinExchange();
+    
+        // Proccess user input
+        void validateUserInputFile(const std::string& filename);
         
-        void processInputFile(const std::string& filename);
-};
+        // Get exchange rate for a specific date
+        float getExchangeRate(const std::string& date) const;
+    };
 
 #endif

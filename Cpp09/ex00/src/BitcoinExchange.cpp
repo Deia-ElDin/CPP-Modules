@@ -2,24 +2,23 @@
 #include "Utils.hpp"
 
 BitcoinExchange::BitcoinExchange() {
-    Utils::printMsg("BitcoinExchange default constructor", "yellow");
-    parseExchangeRateDB("data/data.csv");
+    Utils::printMsg("BitcoinExchange default constructor", "blue");
+    validateDatabaseFile("data/data.csv");
 }
 
 BitcoinExchange::BitcoinExchange(const std::string& databaseFile) {
-    Utils::printMsg("BitcoinExchange constructor with database file", "yellow");
-    parseExchangeRateDB(databaseFile);
+    Utils::printMsg("BitcoinExchange constructor with database file", "blue");
+    validateDatabaseFile(databaseFile);
 }
 
-
-BitcoinExchange::BitcoinExchange(const BitcoinExchange& other) : exchangeRates(other.exchangeRates) {
-    Utils::printMsg("BitcoinExchange copy constructor", "yellow");
+BitcoinExchange::BitcoinExchange(const BitcoinExchange& other) : _exchangeRates(other._exchangeRates) {
+    Utils::printMsg("BitcoinExchange copy constructor", "blue");
 }
 
 BitcoinExchange& BitcoinExchange::operator=(const BitcoinExchange& other) {
-    Utils::printMsg("BitcoinExchange assignment operator", "yellow");
+    Utils::printMsg("BitcoinExchange assignment operator", "blue");
 
-    if (this != &other) exchangeRates = other.exchangeRates;
+    if (this != &other) _exchangeRates = other._exchangeRates;
     return *this;
 }
 
@@ -27,168 +26,166 @@ BitcoinExchange::~BitcoinExchange() {
     Utils::printMsg("BitcoinExchange destructor", "magenta");
 }
 
+void    BitcoinExchange::validateDatabaseFile(const std::string& filename) {
+    std::ifstream file;
 
-bool BitcoinExchange::parseExchangeRateDB(const std::string& filename) {
-    std::ifstream file(filename.c_str());
-    if (!file.is_open()) 
-        return (Utils::printErr("Error: could not open database file."), false);
+    try {
+        Utils::printMsg("Step 1:    parsing database file, filename = " + filename, "yellow");
+        parseFile(file, filename);
+        Utils::printMsg("Step 1:    Completed Successfully", "green");
+    } catch (const std::exception& e) {
+        Utils::throwErr("    Failed to validate database file: " + Utils::toStr(e.what()));
+    }
+    
+    try {
+        Utils::printMsg("Step 2:    filling database, filename = " + filename, "yellow");
+        fillDbContainer(file, filename);
+        Utils::printMsg("Step 2:    Completed Successfully", "green");
+    } catch (const std::exception& e) {
+        Utils::throwErr("    Failed to fill database container: " + Utils::toStr(e.what()));
+    }
+}
+
+void    BitcoinExchange::validateUserInputFile(const std::string& filename) {
+    std::ifstream file;
+
+    try {
+        Utils::printMsg("Step 3:    parsing user input file, filename = " + filename, "yellow");
+        parseInputFile(file, filename);
+        Utils::printMsg("Step 3:    Completed Successfully", "green");
+    } catch (const std::exception& e) {
+        Utils::throwErr("    Failed to validate user input file: " + Utils::toStr(e.what()));
+    }
+    
+    try {
+        Utils::printMsg("Step 4:    processing user input file, filename = " + filename, "yellow");
+        processInputFile(file, filename);
+        Utils::printMsg("Step 4:    Completed Successfully", "green");
+    } catch (const std::exception& e) {
+        Utils::throwErr("    Failed to process user input file: " + Utils::toStr(e.what()));
+    }
+}
+
+void    BitcoinExchange::parseFile(std::ifstream& file, const std::string& filename) {
+    Utils::openFile(file, filename);
 
     std::string line;
-    // Skip the header line
-    std::getline(file, line);
+    int         lineIdx = 0;
+    bool        fileHasContent = false;
+    
+    while (std::getline(file, line) && ++lineIdx) {
+        Utils::parseDbFileLine(file, line, lineIdx);
+        fileHasContent = true;
+    }
+    
+    if (!fileHasContent) 
+        Utils::closeFileWithErr(file, "File is empty or contains only headers: " + filename);
 
-    // Parse the rest of the file
-    while (std::getline(file, line)) {
-        std::istringstream iss(line);
+    file.close();
+}
+
+void    BitcoinExchange::fillDbContainer(std::ifstream& file, const std::string& filename) {
+    Utils::openFile(file, filename, true);
+
+    std::string line;
+    std::string prevDate = "";
+    int lineIdx = 1;
+
+    while (std::getline(file, line) && ++lineIdx) {
+        std::string trimmedLine = Utils::trim(line);
+        
+        std::istringstream iss(trimmedLine);
         std::string date;
         std::string rateStr;
         
-        // Expected format: date,rate
-        if (std::getline(iss, date, ',') && std::getline(iss, rateStr)) {
-            try {
-                float rate = std::atof(rateStr.c_str());
-                if (isValidDate(date)) {
-                    exchangeRates[date] = rate;
-                }
-            } catch (...) {
-                std::cerr << "Error: failed to parse exchange rate for date: " << date << std::endl;
-            }
+        std::getline(iss, date, ',');
+        std::getline(iss, rateStr);
+        
+        date = Utils::trim(date);
+        rateStr = Utils::trim(rateStr);
+        
+        float rate = std::strtof(rateStr.c_str(), NULL);
+        
+        // just to make sure it's not the first line and there's prevDate t compare it with date.
+        // if it's less than data it's not in chronological order
+        if (!prevDate.empty() && date <= prevDate) { 
+            std::stringstream ss;
+            ss << "line " << lineIdx << "- Dates not in chronological order. '" << date << "' comes after '" << prevDate << "'";
+            Utils::closeFileWithErr(file, ss.str());
         }
+
+        prevDate = date; // then we set the prevDate to the current date for the next iteration
+        _exchangeRates[date] = rate; // since all passed so far, we can store in our map (db)
     }
+
     file.close();
-    return !exchangeRates.empty();
+
+    if (_exchangeRates.empty()) 
+        Utils::throwErr("No valid data entries found in database file.");
 }
 
-void BitcoinExchange::processInputFile(const std::string& filename) {
-    Utils::printMsg("1", "blue");
-    if (exchangeRates.empty()) 
-        return (Utils::printErr("Error: exchange rate database is empty."));
-  Utils::printMsg("2", "blue");
-    std::ifstream file(filename.c_str());
-    if (!file.is_open())
-        return (Utils::printErr("Error: could not open file."));
+void    BitcoinExchange::parseInputFile(std::ifstream& file, const std::string& filename) {
+    Utils::openFile(file, filename);
 
     std::string line;
-    // Skip the header line
-    std::getline(file, line);
-
-    // Process each line in the input file
-    while (std::getline(file, line)) {
-        processInputLine(line);
+    int         lineIdx = 0;
+    bool        fileHasContent = false;
+    
+    while (std::getline(file, line) && ++lineIdx) {
+        std::string trimmedLine = Utils::trim(line);
+        Utils::parseUserInputFileLine(file, trimmedLine, lineIdx);
+        fileHasContent = true;
     }
+    
+    if (!fileHasContent) 
+        Utils::closeFileWithErr(file, "File is empty or contains only headers: " + filename);
+
     file.close();
 }
 
-void BitcoinExchange::processInputLine(const std::string& line) {
-    std::istringstream iss(line);
-    std::string date;
-    std::string valueStr;
+void    BitcoinExchange::processInputFile(std::ifstream& file, const std::string& filename) {
+    Utils::openFile(file, filename, true);
+
+    std::string line;
     
-    // Expected format: date | value
-    if (std::getline(iss, date, '|') && std::getline(iss, valueStr)) {
-        // Trim whitespace
-        date.erase(0, date.find_first_not_of(" \t"));
-        date.erase(date.find_last_not_of(" \t") + 1);
-        valueStr.erase(0, valueStr.find_first_not_of(" \t"));
-        valueStr.erase(valueStr.find_last_not_of(" \t") + 1);
+    while (std::getline(file, line)) {
+        size_t      pipePos = line.find('|');
+        std::string date = Utils::trim(line.substr(0, pipePos));
+        std::string valueStr = Utils::trim(line.substr(pipePos + 1));
+        float       value = std::strtof(valueStr.c_str(), NULL);
+
+        float exchangeRate = getExchangeRate(date);
         
-        // Validate the date
-        if (!isValidDate(date)) {
-            std::cerr << "Error: bad input => " << date << std::endl;
-            return;
+        if (exchangeRate < 0) {
+            Utils::printErr("no exchange rate available for date: " + date);
+            continue;
         }
         
-        // Parse and validate the value
-        float value;
-        try {
-            value = std::atof(valueStr.c_str());
-            if (value < 0) 
-                return (Utils::printErr("Error: not a positive number."));
-            if (value > 1000) 
-                return (Utils::printErr("Error: too large a number."));
-
-        } catch (...) {
-            std::cerr << "Error: invalid value => " << valueStr << std::endl;
-            return;
-        }
-
-        // Find the exchange rate for the date (or closest date)
-        std::string closestDate = findClosestDate(date);
-        if (closestDate.empty()) {
-            std::cerr << "Error: no exchange rate available for date: " << date << std::endl;
-            // Utils::printErr("Error: no exchange rate available for date: " + date);
-            return;
-        }
-
-        // Calculate and display the result
-        float exchangeRate = exchangeRates[closestDate];
         float result = value * exchangeRate;
-        
         std::cout << date << " => " << value << " = " << result << std::endl;
-    } else {
-        Utils::printErr("Error: bad input => " + line);
     }
+
+    file.close();
 }
 
-bool BitcoinExchange::isValidDate(const std::string& date) const {
-    // Date format should be YYYY-MM-DD
-    if (date.length() != 10) {
-        return false;
+float   BitcoinExchange::getExchangeRate(const std::string& date) const {
+    // First try to find the exact date
+    std::map<std::string, float>::const_iterator it = _exchangeRates.find(date);
+    if (it != _exchangeRates.end()) {
+        return it->second;
     }
     
-    if (date[4] != '-' || date[7] != '-') {
-        return false;
-    }
-    
-    // Extract year, month, and day
-    int year, month, day;
-    try {
-        year = std::atoi(date.substr(0, 4).c_str());
-        month = std::atoi(date.substr(5, 2).c_str());
-        day = std::atoi(date.substr(8, 2).c_str());
-    } catch (...) {
-        return false;
-    }
-    
-    // Check basic range validity
-    if (year < 1 || month < 1 || month > 12 || day < 1 || day > 31) {
-        return false;
-    }
-    
-    // Check specific month lengths
-    if (month == 4 || month == 6 || month == 9 || month == 11) {
-        if (day > 30) return false;
-    } else if (month == 2) {
-        // February: check for leap year
-        bool isLeapYear = (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0));
-        if (day > (isLeapYear ? 29 : 28)) return false;
-    }
-    
-    return true;
-}
-
-bool BitcoinExchange::isValidValue(const float value) const {
-    return (value >= 0 && value <= 1000);
-}
-
-std::string BitcoinExchange::findClosestDate(const std::string& date) const {
-    // If the exact date exists in the map, return it
-    std::map<std::string, float>::const_iterator it = exchangeRates.find(date);
-    if (it != exchangeRates.end()) {
-        return date;
-    }
-    
-    // If the date is earlier than the first date in our database, return empty string
-    it = exchangeRates.begin();
-    if (it != exchangeRates.end() && date < it->first) {
-        return "";
+    // If the date is earlier than the first date in our database, return error value
+    it = _exchangeRates.begin();
+    if (it != _exchangeRates.end() && date < it->first) {
+        return -1.0f;  // Indicate that no exchange rate is available
     }
     
     // Otherwise, find the closest date that is not greater than the given date
-    it = exchangeRates.lower_bound(date);
-    if (it != exchangeRates.begin() && (it == exchangeRates.end() || it->first > date)) {
-        --it;
+    it = _exchangeRates.lower_bound(date);
+    if (it != _exchangeRates.begin() && (it == _exchangeRates.end() || it->first > date)) {
+        --it;  // Get the previous element (closest lower date)
     }
     
-    return it->first;
+    return it->second;
 }

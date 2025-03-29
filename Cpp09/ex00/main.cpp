@@ -2,12 +2,19 @@
 #include "BitcoinExchange.hpp"
 
 int main(int ac, char **av) {
-    if (ac != 2) 
-        return (Utils::printErr("Error: could not open file."), 1);
+    if (ac != 2) {
+        Utils::printErr("Ac Error: program requires one argument (input file).");
+        Utils::printMsg("Usage: ./btc <input_file>", "yellow");
+        return 1;
+    }
 
-    BitcoinExchange btc;
-    
-    btc.processInputFile(av[1]);
+    try {
+        BitcoinExchange btc;
+        btc.validateUserInputFile(av[1]);
+    } catch (const std::exception& e) {
+        Utils::printErr("Error: " + Utils::toStr(e.what()));
+        return 1;
+    }
     
     return 0;
 }
