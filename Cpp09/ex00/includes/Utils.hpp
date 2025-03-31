@@ -36,7 +36,7 @@ namespace Utils
     bool        parseUserValue(const std::string& valueStr, float& value, std::string& errorMsg);
     void        parsePipes(std::ifstream& file, const std::string& trimmedLine, int lineIdx);
 
-// Header and Empty lines
+    // Header and Empty lines
     void        parseFileHeader(std::ifstream& file, const std::string& trimmedLine, const std::string& header);
     void        parseEmptyLine(std::ifstream& file, const std::string& trimmedLine, int lineIdx);
     
