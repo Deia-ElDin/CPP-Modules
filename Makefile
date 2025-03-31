@@ -31,6 +31,9 @@ fclean:
 		done; \
 		cd ..; \
 	done
+	@echo "$(YELLOW)Removing all errors.log files...$(NC)"
+	@find . -name "errors.log" -type f -delete
+	@echo "$(GREEN)All errors.log files have been removed.$(NC)"
 
 # Test target with Valgrind
 test: $(wordlist 2,2,$(MAKECMDGOALS))

@@ -1,6 +1,5 @@
 valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./btc data/input.txt
 
-
 --leak-check=full: Shows detailed information about memory leaks, including where they occurred in your code.
 --show-leak-kinds=all: Reports all types of memory leaks (definite, possible, indirect, and still-reachable).
 --track-origins=yes: Shows where uninitialized values came from, not just where they were used.

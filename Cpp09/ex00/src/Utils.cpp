@@ -81,64 +81,39 @@ void                Utils::closeFileWithErr(std::ifstream& file, const std::stri
 }
 
 
-// Header and format validations
-void                Utils::parseFileHeader(std::ifstream& file, const std::string& trimmedLine, const std::string& header) {
-    if (trimmedLine != header) {
-        std::stringstream ss;
-        if (header == "date,exchange_rate")
-            ss << "Invalid header in database file. Expected '" << header << "', got '" << trimmedLine << "'";
-        else
-            ss << "Invalid header in user input file. Expected '" << header << "', got '" << trimmedLine << "'";
-        closeFileWithErr(file, ss.str());
-    }
-}
-
-void                Utils::parseCommas(std::ifstream& file, const std::string& trimmedLine, int lineIdx) {
-    size_t commaCount = countChar(trimmedLine, ',');
-    
-    if (commaCount == 0 || commaCount > 1) {
-        std::stringstream ss;
-        if (commaCount == 0)
-            ss << "line " << lineIdx << " - Missing comma separator. Expected 'date,rate', got '" << trimmedLine << "'";
-        else
-            ss << "line " << lineIdx << " - Too many commas. Expected 'date,rate', got '" << trimmedLine << "'";
-        closeFileWithErr(file, ss.str());
-    }
-
-    size_t commaPos = trimmedLine.find(',');
-    std::string datePart = trim(trimmedLine.substr(0, commaPos));
-    std::string ratePart = trim(trimmedLine.substr(commaPos + 1));
-    
-    if (datePart.empty() || ratePart.empty()) {
-        std::stringstream ss;
-        ss << "line " << lineIdx << " - Invalid format. Expected 'date,rate', got '" << trimmedLine << "'";
-        closeFileWithErr(file, ss.str());
-    }
-}
-
-void                Utils::parsePipes(std::ifstream& file, const std::string& trimmedLine, int lineIdx) {
-    size_t pipeCount = countChar(trimmedLine, '|');
-    
-    if (pipeCount == 0 || pipeCount > 1) {
-        std::stringstream ss;
-        if (pipeCount == 0)
-            ss << "line " << lineIdx << " - Missing pipe separator. Expected 'date | value', got '" << trimmedLine << "'";
-        else
-            ss << "line " << lineIdx << " - Too many pipes. Expected 'date | value', got '" << trimmedLine << "'";
-        closeFileWithErr(file, ss.str());
-    }
-}
-
-void                Utils::parseEmptyLine(std::ifstream& file, const std::string& trimmedLine, int lineIdx) {
-    if (trimmedLine.empty()) {
-        std::stringstream ss;
-        ss << "line " << lineIdx << " - Empty line or contains only whitespace";
-        closeFileWithErr(file, ss.str());
-    }
-}
-
-
 // Datebase file validations
+void                Utils::parseDbFileLine(std::ifstream& file, const std::string& trimmedLine, int lineIdx) {
+    if (lineIdx == 1) 
+        return (parseFileHeader(file, trimmedLine, "date,exchange_rate"));
+    parseEmptyLine(file, trimmedLine, lineIdx);
+    parseCommas(file, trimmedLine, lineIdx);
+ 
+    std::istringstream  iss(trimmedLine);
+    std::string         date;
+    std::string         rateStr;
+    float               rate;
+
+    if (!std::getline(iss, date, ',')) {
+        std::stringstream ss;
+        ss << "line " << lineIdx << " - Missing date field. Expected 'date,rate', got '" << trimmedLine << "'";
+        closeFileWithErr(file, ss.str());
+    }
+
+    date = trim(date);
+    parseDbFileDate(file, date, lineIdx);
+
+
+
+    if (!std::getline(iss, rateStr)) {
+        std::stringstream ss;
+        ss << "line " << lineIdx << " - Missing rate field. Expected 'date,rate', got '" << trimmedLine << "'";
+        closeFileWithErr(file, ss.str());
+    }
+    
+    rateStr = trim(rateStr);
+    parseDbFileRate(file, rateStr, rate, lineIdx);
+}
+
 void                Utils::parseDbFileDate(std::ifstream& file, const std::string& date, int lineIdx) {
     if (date.length() != 10 || date[4] != '-' || date[7] != '-' || date < "2009-01-03") {
         std::stringstream ss;
@@ -214,8 +189,73 @@ void                Utils::parseDbFileRate(std::ifstream& file, const std::strin
     }
 }
 
+void                Utils::parseCommas(std::ifstream& file, const std::string& trimmedLine, int lineIdx) {
+    size_t commaCount = countChar(trimmedLine, ',');
+    
+    if (commaCount == 0 || commaCount > 1) {
+        std::stringstream ss;
+        if (commaCount == 0)
+            ss << "line " << lineIdx << " - Missing comma separator. Expected 'date,rate', got '" << trimmedLine << "'";
+        else
+            ss << "line " << lineIdx << " - Too many commas. Expected 'date,rate', got '" << trimmedLine << "'";
+        closeFileWithErr(file, ss.str());
+    }
+
+    size_t commaPos = trimmedLine.find(',');
+    std::string datePart = trim(trimmedLine.substr(0, commaPos));
+    std::string ratePart = trim(trimmedLine.substr(commaPos + 1));
+    
+    if (datePart.empty() || ratePart.empty()) {
+        std::stringstream ss;
+        ss << "line " << lineIdx << " - Invalid format. Expected 'date,rate', got '" << trimmedLine << "'";
+        closeFileWithErr(file, ss.str());
+    }
+}
+
 
 // User Input File validations
+bool                Utils::parseUserInputFileLine(const std::string& line, int lineIdx, std::string& date, float& value, std::string& errorMsg) {
+    std::string trimmedLine = trim(line);
+    
+    if (lineIdx == 1 && trimmedLine == "date | value") 
+        return false; 
+    
+    if (trimmedLine.empty()) {
+        errorMsg = "bad input => " + line;
+        return false;
+    }
+    
+    size_t pipePos = trimmedLine.find('|');
+    if (pipePos == std::string::npos) {
+        errorMsg = "bad input => " + line;
+        return false;
+    }
+
+    date = trim(trimmedLine.substr(0, pipePos));
+    std::string valueStr = trim(trimmedLine.substr(pipePos + 1));
+    
+    if (date.empty() || valueStr.empty()) {
+        errorMsg = "bad input => " + line;
+        return false;
+    }
+    
+    if (!parseUserDate(date, errorMsg)) {
+        if (errorMsg.find("bad input =>") == std::string::npos)
+            errorMsg = "bad input => " + line;
+        return false;
+    }
+    
+    if (!parseUserValue(valueStr, value, errorMsg)) {
+        if (errorMsg == "bad input" || errorMsg == "not a valid number") {
+            errorMsg = "bad input => " + line;
+        }
+        return false;
+    }
+
+    
+    return true;
+}
+
 bool                Utils::parseUserDate(const std::string& date, std::string& errorMsg) {
     // Check format
     if (date.length() != 10 || date[4] != '-' || date[7] != '-') {
@@ -290,78 +330,35 @@ bool                Utils::parseUserValue(const std::string& valueStr, float& va
     return true;
 }
 
-
-// Parse line functions
-void                Utils::parseDbFileLine(std::ifstream& file, const std::string& trimmedLine, int lineIdx) {
-    if (lineIdx == 1) 
-        return (parseFileHeader(file, trimmedLine, "date,exchange_rate"));
-    parseEmptyLine(file, trimmedLine, lineIdx);
-    parseCommas(file, trimmedLine, lineIdx);
- 
-    std::istringstream  iss(trimmedLine);
-    std::string         date;
-    std::string         rateStr;
-    float               rate;
-
-    if (!std::getline(iss, date, ',')) {
-        std::stringstream ss;
-        ss << "line " << lineIdx << " - Missing date field. Expected 'date,rate', got '" << trimmedLine << "'";
-        closeFileWithErr(file, ss.str());
-    }
-
-    date = trim(date);
-    parseDbFileDate(file, date, lineIdx);
-
-
-
-    if (!std::getline(iss, rateStr)) {
-        std::stringstream ss;
-        ss << "line " << lineIdx << " - Missing rate field. Expected 'date,rate', got '" << trimmedLine << "'";
-        closeFileWithErr(file, ss.str());
-    }
+void                Utils::parsePipes(std::ifstream& file, const std::string& trimmedLine, int lineIdx) {
+    size_t pipeCount = countChar(trimmedLine, '|');
     
-    rateStr = trim(rateStr);
-    parseDbFileRate(file, rateStr, rate, lineIdx);
+    if (pipeCount == 0 || pipeCount > 1) {
+        std::stringstream ss;
+        if (pipeCount == 0)
+            ss << "line " << lineIdx << " - Missing pipe separator. Expected 'date | value', got '" << trimmedLine << "'";
+        else
+            ss << "line " << lineIdx << " - Too many pipes. Expected 'date | value', got '" << trimmedLine << "'";
+        closeFileWithErr(file, ss.str());
+    }
 }
 
-bool                Utils::parseUserInputFileLine(const std::string& line, int lineIdx, std::string& date, float& value, std::string& errorMsg) {
-    std::string trimmedLine = trim(line);
-    
-    if (lineIdx == 1 && trimmedLine == "date | value") 
-        return false; 
-    
+
+// Header and Empty lines
+void                Utils::parseFileHeader(std::ifstream& file, const std::string& trimmedLine, const std::string& header) {
+    if (trimmedLine != header) {
+        std::stringstream ss;
+        if (header == "date,exchange_rate")
+            ss << "Invalid header in database file. Expected '" << header << "', got '" << trimmedLine << "'";
+        else
+            ss << "Invalid header in user input file. Expected '" << header << "', got '" << trimmedLine << "'";
+        closeFileWithErr(file, ss.str());
+    }
+}
+void                Utils::parseEmptyLine(std::ifstream& file, const std::string& trimmedLine, int lineIdx) {
     if (trimmedLine.empty()) {
-        errorMsg = "bad input => " + line;
-        return false;
+        std::stringstream ss;
+        ss << "line " << lineIdx << " - Empty line or contains only whitespace";
+        closeFileWithErr(file, ss.str());
     }
-    
-    size_t pipePos = trimmedLine.find('|');
-    if (pipePos == std::string::npos) {
-        errorMsg = "bad input => " + line;
-        return false;
-    }
-
-    date = trim(trimmedLine.substr(0, pipePos));
-    std::string valueStr = trim(trimmedLine.substr(pipePos + 1));
-    
-    if (date.empty() || valueStr.empty()) {
-        errorMsg = "bad input => " + line;
-        return false;
-    }
-    
-    if (!parseUserDate(date, errorMsg)) {
-        if (errorMsg.find("bad input =>") == std::string::npos)
-            errorMsg = "bad input => " + line;
-        return false;
-    }
-    
-    if (!parseUserValue(valueStr, value, errorMsg)) {
-        if (errorMsg == "bad input" || errorMsg == "not a valid number") {
-            errorMsg = "bad input => " + line;
-        }
-        return false;
-    }
-
-    
-    return true;
 }
