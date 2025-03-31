@@ -67,6 +67,8 @@ LINES=(
     "2020-02-29,1.0"
     "2019-02-29,1.0"
     "2019-02-22,2147483647"
+    "2009-01-a1,0"
+    "2009-01-1a,0"
 )
 
 # List of valid test cases that should be accepted

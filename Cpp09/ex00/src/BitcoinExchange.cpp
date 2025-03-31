@@ -68,7 +68,7 @@ void    BitcoinExchange::validateUserInputFile(const std::string& filename) {
 }
 
 
-// Helpers parsing functions
+// Database file parsing functions
 void    BitcoinExchange::parseFile(std::ifstream& file, const std::string& filename) {
     Utils::openFile(file, filename);
 
@@ -77,7 +77,8 @@ void    BitcoinExchange::parseFile(std::ifstream& file, const std::string& filen
     bool        fileHasContent = false;
     
     while (std::getline(file, line) && ++lineIdx) {
-        Utils::parseDbFileLine(file, line, lineIdx);
+        std::string trimmedLine = Utils::trim(line);
+        Utils::parseDbFileLine(file, trimmedLine, lineIdx);
         fileHasContent = true;
     }
     
@@ -92,7 +93,7 @@ void    BitcoinExchange::fillDbContainer(std::ifstream& file, const std::string&
 
     std::string line;
     std::string prevDate = "";
-    int lineIdx = 1;
+    int         lineIdx = 1;
 
     while (std::getline(file, line) && ++lineIdx) {
         std::string trimmedLine = Utils::trim(line);
@@ -107,9 +108,10 @@ void    BitcoinExchange::fillDbContainer(std::ifstream& file, const std::string&
         date = Utils::trim(date);
         rateStr = Utils::trim(rateStr);
         
-        float rate = strtof(rateStr.c_str(), NULL);
+        // convert string to float and the null is for the end of the string, because i'm sure it's a valid float
+        float rate = strtof(rateStr.c_str(), NULL); 
         
-        // just to make sure it's not the first line and there's prevDate t compare it with date.
+        // just to make sure it's not the first line and there's prevDate to compare it with date.
         // if it's less than data it's not in chronological order
         if (!prevDate.empty() && date <= prevDate) { 
             std::stringstream ss;
@@ -127,6 +129,8 @@ void    BitcoinExchange::fillDbContainer(std::ifstream& file, const std::string&
         Utils::throwErr("No valid data entries found in database file.");
 }
 
+
+// User input file parsing functions
 void    BitcoinExchange::parseInputFile(std::ifstream& file, const std::string& filename) {
     Utils::openFile(file, filename);
 
@@ -135,10 +139,11 @@ void    BitcoinExchange::parseInputFile(std::ifstream& file, const std::string& 
     
     if (std::getline(file, line)) {
         std::string trimmedLine = Utils::trim(line);
-        if (trimmedLine != "date | value") {
+
+        if (trimmedLine != "date | value")
             Utils::closeFileWithErr(file, "Invalid header in user input file. Expected 'date | value', got '" + trimmedLine + "'");
-        }
         fileHasContent = true;
+
     }
     
     if (!fileHasContent) 
@@ -151,14 +156,13 @@ void    BitcoinExchange::processInputFile(std::ifstream& file, const std::string
     Utils::openFile(file, filename, true); 
 
     std::string line;
-    int         lineIdx = 1;
     
     while (std::getline(file, line)) {
-        std::string date;
-        float value;
         std::string errorMsg;
+        std::string date;
+        float       value;
         
-        if (Utils::parseUserInputFileLine(line, lineIdx++, date, value, errorMsg)) {
+        if (Utils::parseUserInputFileLine(line, date, value, errorMsg)) {
             float exchangeRate = getExchangeRate(date);
 
             if (exchangeRate < 0) {
@@ -175,6 +179,8 @@ void    BitcoinExchange::processInputFile(std::ifstream& file, const std::string
     file.close();
 }
 
+
+// Get exchange rate for a specific date
 float   BitcoinExchange::getExchangeRate(const std::string& date) const {
     std::map<std::string, float>::const_iterator it = _exchangeRates.find(date);
     if (it != _exchangeRates.end()) 
@@ -184,10 +190,12 @@ float   BitcoinExchange::getExchangeRate(const std::string& date) const {
     if (date < it->first) 
         return -1.0f;
     
-    // Otherwise, we find the closest date that is not greater than the given date
-    it = _exchangeRates.lower_bound(date); // returns an iterator (first entry not less than target)
+    // returns an iterator (first entry not less than date, value >= data by step)
+    it = _exchangeRates.lower_bound(date);
+    // it == _exchangeRates.end() means that the date is later than the last date in our db,
+    // which means it's right after the last element in our db so we need to get the previous element
     if (it != _exchangeRates.begin() && (it == _exchangeRates.end() || it->first > date)) 
-        --it;  // Get the previous element (closest lower date)
+        --it;
 
     return it->second;
 }

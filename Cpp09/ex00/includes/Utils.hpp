@@ -19,6 +19,7 @@ namespace Utils
     // String operations
     std::string trim(const std::string& str);
     size_t      countChar(const std::string& str, char c);
+    bool        isAllDigits(const std::string &str);
 
     // File operations
     void        openFile(std::ifstream& file, const std::string& filename, bool escapeLine = false);
@@ -31,7 +32,7 @@ namespace Utils
     void        parseCommas(std::ifstream& file, const std::string& trimmedLine, int lineIdx);
 
     // User Input File validations
-    bool        parseUserInputFileLine(const std::string& line, int lineIdx, std::string& date, float& value, std::string& errorMsg);
+    bool        parseUserInputFileLine(const std::string& line, std::string& date, float& value, std::string& errorMsg);
     bool        parseUserDate(const std::string& date, std::string& errorMsg);
     bool        parseUserValue(const std::string& valueStr, float& value, std::string& errorMsg);
     void        parsePipes(std::ifstream& file, const std::string& trimmedLine, int lineIdx);

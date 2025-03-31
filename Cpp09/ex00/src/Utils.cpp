@@ -43,9 +43,9 @@ std::string         Utils::trim(const std::string& str) {
     
     std::string result = str;
 
-    size_t first = result.find_first_not_of(" \t");
+    size_t first = result.find_first_not_of(" \t"); // find first non-whitespace character
     
-    if (first == std::string::npos) return "";
+    if (first == std::string::npos) return ""; // no position found
     
     size_t last = result.find_last_not_of(" \t");
 	
@@ -54,12 +54,18 @@ std::string         Utils::trim(const std::string& str) {
 
 size_t              Utils::countChar(const std::string& str, char c) {
     size_t count = 0;
-    for (size_t i = 0; i < str.length(); i++) {
-        if (str[i] == c) {
+
+    for (size_t i = 0; i < str.length(); i++) 
+        if (str[i] == c) 
             count++;
-        }
-    }
     return count;
+}
+
+bool                Utils::isAllDigits(const std::string &str) {
+    for (std::string::const_iterator it = str.begin(); it != str.end(); ++it)
+        if (!std::isdigit(*it))
+            return false;
+    return true;
 }
 
 
@@ -93,7 +99,7 @@ void                Utils::parseDbFileLine(std::ifstream& file, const std::strin
     std::string         rateStr;
     float               rate;
 
-    if (!std::getline(iss, date, ',')) {
+    if (!std::getline(iss, date, ',')) { // read text from an input string stream (iss) up until it encounters a comma
         std::stringstream ss;
         ss << "line " << lineIdx << " - Missing date field. Expected 'date,rate', got '" << trimmedLine << "'";
         closeFileWithErr(file, ss.str());
@@ -121,16 +127,25 @@ void                Utils::parseDbFileDate(std::ifstream& file, const std::strin
             ss << "line " << lineIdx << " - Invalid date format '" << date << "'. Expected YYYY-MM-DD";
         else
             ss << "line " << lineIdx << " - Invalid date '" << date << "'. Bitcoin didn't exist before January 3rd, 2009";
-
         closeFileWithErr(file, ss.str());
     }
     
     int year, month, day;
 
     try {
-        year = atoi(date.substr(0, 4).c_str());
-        month = atoi(date.substr(5, 2).c_str());
-        day = atoi(date.substr(8, 2).c_str());
+        std::string yearStr = date.substr(0, 4);
+        std::string monthStr = date.substr(5, 2);
+        std::string dayStr = date.substr(8, 2);
+        
+        if (!isAllDigits(yearStr) || !isAllDigits(monthStr) || !isAllDigits(dayStr)) {
+            std::stringstream ss;
+            ss << "line " << lineIdx << " - Invalid date format '" << date << "'. Expected YYYY-MM-DD";
+            closeFileWithErr(file, ss.str());
+        }
+        
+        year = atoi(yearStr.c_str());
+        month = atoi(monthStr.c_str());
+        day = atoi(dayStr.c_str());
     } catch (...) {
         std::stringstream ss;
         ss << "line " << lineIdx << " - Invalid date format '" << date << "'. Expected YYYY-MM-DD";
@@ -150,7 +165,11 @@ void                Utils::parseDbFileDate(std::ifstream& file, const std::strin
             closeFileWithErr(file, ss.str());
         }
     } else if (month == 2) {
-        bool isLeapYear = (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0));
+        // Check for leap year 
+        // A year must be divisible by 4 so that the extra quarter-day each year adds up to a full day every four years.
+        // It means that if a year is a century (divisible by 100), it must also be divisible by 400 to be a leap year.
+        bool isLeapYear = (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0)); 
+
         if (day > (isLeapYear ? 29 : 28)) {
             std::stringstream ss;
             ss << "line " << lineIdx << " - Invalid day value in '" << date << "'. February " << year;
@@ -161,6 +180,8 @@ void                Utils::parseDbFileDate(std::ifstream& file, const std::strin
 }
 
 void                Utils::parseDbFileRate(std::ifstream& file, const std::string& rateStr, float& rate, int lineIdx) {
+    // Check if the exchange rate string contains hexadecimal markers and triggers an error if found.
+    // p+/- It indicates the exponent part in a hexadecimal floating-point literal, similar to 'e' in scientific notation.
     if (rateStr.find("0x") != std::string::npos || 
         rateStr.find("0X") != std::string::npos ||
         rateStr.find("p+") != std::string::npos ||
@@ -170,10 +191,12 @@ void                Utils::parseDbFileRate(std::ifstream& file, const std::strin
         closeFileWithErr(file, ss.str());
     }
     
+    // Converts the string to a float and sets endptr to point to any remaining characters that weren't part of the number.
     char* endptr;
     rate = strtof(rateStr.c_str(), &endptr);
     
-    if (*endptr != '\0' || rate < 0 || rate > 1000000.0f || std::isnan(rate) || std::isinf(rate)) {
+    // 1 mil is high enough for a single bitcoin
+    if (*endptr != '\0' || rate < 0 || rate > 1000000.0f || std::isnan(rate) || std::isinf(rate)) { 
         std::stringstream ss;
         if (*endptr != '\0')
             ss << "line " << lineIdx << "- Invalid exchange rate format '" << rateStr << "'. Expected a number";
@@ -214,11 +237,8 @@ void                Utils::parseCommas(std::ifstream& file, const std::string& t
 
 
 // User Input File validations
-bool                Utils::parseUserInputFileLine(const std::string& line, int lineIdx, std::string& date, float& value, std::string& errorMsg) {
+bool                Utils::parseUserInputFileLine(const std::string& line, std::string& date, float& value, std::string& errorMsg) {
     std::string trimmedLine = trim(line);
-    
-    if (lineIdx == 1 && trimmedLine == "date | value") 
-        return false; 
     
     if (trimmedLine.empty()) {
         errorMsg = "bad input => " + line;
@@ -257,30 +277,36 @@ bool                Utils::parseUserInputFileLine(const std::string& line, int l
 }
 
 bool                Utils::parseUserDate(const std::string& date, std::string& errorMsg) {
-    // Check format
-    if (date.length() != 10 || date[4] != '-' || date[7] != '-') {
+    if (date.length() != 10 || date[4] != '-' || date[7] != '-' || date < "2009-01-03") {
         errorMsg = "bad input => " + date;
         return false;
     }
     
-    // Parse components
     int year, month, day;
+    
     try {
-        year = atoi(date.substr(0, 4).c_str());
-        month = atoi(date.substr(5, 2).c_str());
-        day = atoi(date.substr(8, 2).c_str());
+        std::string yearStr = date.substr(0, 4);
+        std::string monthStr = date.substr(5, 2);
+        std::string dayStr = date.substr(8, 2);
+        
+        if (!isAllDigits(yearStr) || !isAllDigits(monthStr) || !isAllDigits(dayStr)) {
+            errorMsg = "bad input => " + date;
+            return false;
+        }
+        
+        year = atoi(yearStr.c_str());
+        month = atoi(monthStr.c_str());
+        day = atoi(dayStr.c_str());
     } catch (...) {
         errorMsg = "bad input => " + date;
         return false;
     }
     
-    // Check ranges
     if (year < 1 || month < 1 || month > 12 || day < 1 || day > 31) {
         errorMsg = "bad input => " + date;
         return false;
     }
     
-    // Check month days
     if ((month == 4 || month == 6 || month == 9 || month == 11) && day > 30) {
         errorMsg = "bad input => " + date;
         return false;
@@ -355,6 +381,7 @@ void                Utils::parseFileHeader(std::ifstream& file, const std::strin
         closeFileWithErr(file, ss.str());
     }
 }
+
 void                Utils::parseEmptyLine(std::ifstream& file, const std::string& trimmedLine, int lineIdx) {
     if (trimmedLine.empty()) {
         std::stringstream ss;

@@ -10,12 +10,12 @@ class BitcoinExchange
     private:
         std::map<std::string, float> _exchangeRates;
     
-        // Db Validation
+        // Database file parsing functions
         void validateDatabaseFile(const std::string& filename);
         void parseFile(std::ifstream& file, const std::string& filename);
         void fillDbContainer(std::ifstream& file, const std::string& filename);
         
-        // User input file Validation
+        // User input file parsing functions
         void parseInputFile(std::ifstream& file, const std::string& filename);
         void processInputFile(std::ifstream& file, const std::string& filename);
         
