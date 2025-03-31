@@ -11,6 +11,11 @@ int main(int ac, char **av) {
     try {
         BitcoinExchange btc;
         btc.validateUserInputFile(av[1]);
+
+        // Testing getExchangeRate function
+        // Utils::printMsg("Exchange rate for 2021-01-01: " + Utils::toStr(btc.getExchangeRate("2009-01-01")), "blue");
+        // Utils::printMsg("Exchange rate for 2021-01-03: " + Utils::toStr(btc.getExchangeRate("2021-01-03")), "blue");
+        // Utils::printMsg("Exchange rate for 2021-01-10: " + Utils::toStr(btc.getExchangeRate("2021-01-10")), "blue");
     } catch (const std::exception& e) {
         Utils::printErr("Error: " + Utils::toStr(e.what()));
         return 1;

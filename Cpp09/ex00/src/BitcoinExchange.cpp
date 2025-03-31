@@ -160,7 +160,7 @@ void    BitcoinExchange::processInputFile(std::ifstream& file, const std::string
         
         if (Utils::parseUserInputFileLine(line, lineIdx++, date, value, errorMsg)) {
             float exchangeRate = getExchangeRate(date);
-            
+
             if (exchangeRate < 0) {
                 Utils::printErr("Error: no exchange rate available for date: " + date);
             } else {
@@ -176,20 +176,18 @@ void    BitcoinExchange::processInputFile(std::ifstream& file, const std::string
 }
 
 float   BitcoinExchange::getExchangeRate(const std::string& date) const {
-    // First we try to find the exact date
     std::map<std::string, float>::const_iterator it = _exchangeRates.find(date);
     if (it != _exchangeRates.end()) 
         return it->second;
     
-    // If the date is earlier than the first date in our database, return error value
-    it = _exchangeRates.begin();
+    it = _exchangeRates.begin(); // checking if the date is earlier than the first date in our db
     if (date < it->first) 
-        return -1.0f;  // Indicate that no exchange rate is available
+        return -1.0f;
     
-    // Otherwise, find the closest date that is not greater than the given date
+    // Otherwise, we find the closest date that is not greater than the given date
     it = _exchangeRates.lower_bound(date); // returns an iterator (first entry not less than target)
     if (it != _exchangeRates.begin() && (it == _exchangeRates.end() || it->first > date)) 
         --it;  // Get the previous element (closest lower date)
-    
+
     return it->second;
 }
