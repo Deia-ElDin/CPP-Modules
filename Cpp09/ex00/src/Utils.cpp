@@ -17,21 +17,21 @@ static	std::string constructMsg(const std::string& msg, const std::string& color
 	return textBold + textColor + msg + textReset;
 }
 
-void                Utils::printMsg(const std::string& msg, const std::string& color) {
+void    Utils::printMsg(const std::string& msg, const std::string& color) {
 	std::string fullMsg = constructMsg(msg, color);
 	std::cout << fullMsg << std::endl;
 }
 
-void                Utils::printErr(const std::string& msg) {
+void    Utils::printErr(const std::string& msg) {
 	std::string fullMsg = constructMsg(msg, "red");
 	std::cerr << fullMsg << std::endl;
 }
 
-void                Utils::printSeparator(void) {
+void    Utils::printSeparator(void) {
 	printMsg(" ----------------------------------------", "white");
 }
 
-void                Utils::throwErr(const std::string& msg) {
+void    Utils::throwErr(const std::string& msg) {
 	std::string fullMsg = constructMsg(msg, "red");
 	throw std::runtime_error(fullMsg);
 }
@@ -61,7 +61,7 @@ size_t              Utils::countChar(const std::string& str, char c) {
     return count;
 }
 
-bool                Utils::isAllDigits(const std::string &str) {
+bool    Utils::isAllDigits(const std::string &str) {
     for (std::string::const_iterator it = str.begin(); it != str.end(); ++it)
         if (!std::isdigit(*it))
             return false;
@@ -70,7 +70,7 @@ bool                Utils::isAllDigits(const std::string &str) {
 
 
 // File operations
-void                Utils::openFile(std::ifstream& file, const std::string& filename, bool escapeLine) {
+void    Utils::openFile(std::ifstream& file, const std::string& filename, bool escapeLine) {
     file.open(filename.c_str());
 
     if (!file.is_open()) throwErr("Could not open file: " + filename);
@@ -81,14 +81,14 @@ void                Utils::openFile(std::ifstream& file, const std::string& file
     }
 }
 
-void                Utils::closeFileWithErr(std::ifstream& file, const std::string& errMsg) {
+void    Utils::closeFileWithErr(std::ifstream& file, const std::string& errMsg) {
     file.close();
     throwErr(errMsg);
 }
 
 
 // Datebase file validations
-void                Utils::parseDbFileLine(std::ifstream& file, const std::string& trimmedLine, int lineIdx) {
+void    Utils::parseDbFileLine(std::ifstream& file, const std::string& trimmedLine, int lineIdx) {
     if (lineIdx == 1) 
         return (parseFileHeader(file, trimmedLine, "date,exchange_rate"));
     parseEmptyLine(file, trimmedLine, lineIdx);
@@ -120,7 +120,7 @@ void                Utils::parseDbFileLine(std::ifstream& file, const std::strin
     parseDbFileRate(file, rateStr, rate, lineIdx);
 }
 
-void                Utils::parseDbFileDate(std::ifstream& file, const std::string& date, int lineIdx) {
+void    Utils::parseDbFileDate(std::ifstream& file, const std::string& date, int lineIdx) {
     if (date.length() != 10 || date[4] != '-' || date[7] != '-' || date < "2009-01-03") {
         std::stringstream ss;
         if (date.length() != 10 || date[4] != '-' || date[7] != '-')
@@ -179,7 +179,7 @@ void                Utils::parseDbFileDate(std::ifstream& file, const std::strin
     }
 }
 
-void                Utils::parseDbFileRate(std::ifstream& file, const std::string& rateStr, float& rate, int lineIdx) {
+void    Utils::parseDbFileRate(std::ifstream& file, const std::string& rateStr, float& rate, int lineIdx) {
     // Check if the exchange rate string contains hexadecimal markers and triggers an error if found.
     // p+/- It indicates the exponent part in a hexadecimal floating-point literal, similar to 'e' in scientific notation.
     if (rateStr.find("0x") != std::string::npos || 
@@ -212,7 +212,7 @@ void                Utils::parseDbFileRate(std::ifstream& file, const std::strin
     }
 }
 
-void                Utils::parseCommas(std::ifstream& file, const std::string& trimmedLine, int lineIdx) {
+void    Utils::parseCommas(std::ifstream& file, const std::string& trimmedLine, int lineIdx) {
     size_t commaCount = countChar(trimmedLine, ',');
     
     if (commaCount == 0 || commaCount > 1) {
@@ -237,7 +237,7 @@ void                Utils::parseCommas(std::ifstream& file, const std::string& t
 
 
 // User Input File validations
-bool                Utils::parseUserInputFileLine(const std::string& line, std::string& date, float& value, std::string& errorMsg) {
+bool    Utils::parseUserInputFileLine(const std::string& line, std::string& date, float& value, std::string& errorMsg) {
     std::string trimmedLine = trim(line);
     
     if (trimmedLine.empty()) {
@@ -276,7 +276,7 @@ bool                Utils::parseUserInputFileLine(const std::string& line, std::
     return true;
 }
 
-bool                Utils::parseUserDate(const std::string& date, std::string& errorMsg) {
+bool    Utils::parseUserDate(const std::string& date, std::string& errorMsg) {
     if (date.length() != 10 || date[4] != '-' || date[7] != '-' || date < "2009-01-03") {
         errorMsg = "bad input => " + date;
         return false;
@@ -321,7 +321,7 @@ bool                Utils::parseUserDate(const std::string& date, std::string& e
     return true;
 }
 
-bool                Utils::parseUserValue(const std::string& valueStr, float& value, std::string& errorMsg) {
+bool    Utils::parseUserValue(const std::string& valueStr, float& value, std::string& errorMsg) {
     if (valueStr.empty()) {
         errorMsg = "bad input";
         return false;
@@ -356,7 +356,7 @@ bool                Utils::parseUserValue(const std::string& valueStr, float& va
     return true;
 }
 
-void                Utils::parsePipes(std::ifstream& file, const std::string& trimmedLine, int lineIdx) {
+void    Utils::parsePipes(std::ifstream& file, const std::string& trimmedLine, int lineIdx) {
     size_t pipeCount = countChar(trimmedLine, '|');
     
     if (pipeCount == 0 || pipeCount > 1) {
@@ -371,7 +371,7 @@ void                Utils::parsePipes(std::ifstream& file, const std::string& tr
 
 
 // Header and Empty lines
-void                Utils::parseFileHeader(std::ifstream& file, const std::string& trimmedLine, const std::string& header) {
+void    Utils::parseFileHeader(std::ifstream& file, const std::string& trimmedLine, const std::string& header) {
     if (trimmedLine != header) {
         std::stringstream ss;
         if (header == "date,exchange_rate")
@@ -382,7 +382,7 @@ void                Utils::parseFileHeader(std::ifstream& file, const std::strin
     }
 }
 
-void                Utils::parseEmptyLine(std::ifstream& file, const std::string& trimmedLine, int lineIdx) {
+void    Utils::parseEmptyLine(std::ifstream& file, const std::string& trimmedLine, int lineIdx) {
     if (trimmedLine.empty()) {
         std::stringstream ss;
         ss << "line " << lineIdx << " - Empty line or contains only whitespace";
